@@ -42,9 +42,13 @@ class NewVisitorTest(unittest.TestCase):
         # shows a JMol applet with his selected protein and forms
         # where he can select which residues he would like as the source
         # atoms
-        inputbox.send_keys(keys.ENTER)
+        inputbox.send_keys(Keys.ENTER)
+        import time
+
+        time.sleep(10)
+        
         pdb_url = self.browser.current_url
-        self.assertRegex(pdb_url, '/proteins/1SC1/.+')
+        self.assertRegexpMatches(pdb_url, '/proteins/1SC1/.+')
 
         # Now he hits "Run" and is taken to a new URL where there is a JMol
         # applet showing the protein coloured by quantile scores

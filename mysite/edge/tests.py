@@ -16,3 +16,13 @@ class HomePageTest(TestCase):
         response = home_page(request)
         expected_html = render_to_string('home.html')
         self.assertEqual(response.content.decode(), expected_html)
+
+    def test_home_page_redirects_after_POST_request(self):
+        request = HttpRequest()
+        request.method = 'POST'
+        request.POST['pdb_id'] = '1SC1'
+
+        response = home_page(request)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/proteins/1SC1')

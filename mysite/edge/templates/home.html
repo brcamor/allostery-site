@@ -1,3 +1,12 @@
 <html>
-  <title>Allosteric site prediction</title>
+  <head>
+    <title>Allosteric site prediction</title>
+  </head>
+  <body>
+    <h1>Allosteric site prediction</h1>
+    <form method="POST">
+      <input name="pdb_id", id="id_pdb_id", placeholder="PDB ID"></input>
+      {% csrf_token %}
+    </form>
+  </body>
 </html>
