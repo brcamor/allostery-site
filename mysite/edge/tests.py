@@ -3,7 +3,6 @@ from django.core.urlresolvers import resolve
 from edge.views import home_page
 from django.http import HttpRequest
 from django.template.loader import render_to_string
-# Create your tests here.
 
 class HomePageTest(TestCase):
 
@@ -25,4 +24,16 @@ class HomePageTest(TestCase):
         response = home_page(request)
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/proteins/1SC1')
+        self.assertEqual(response['location'], '/proteins/the-only-protein-in-the-world')
+
+
+class ProteinSetupTest(TestCase):
+
+    def test_uses_different_template(self):
+        response = self.client.get('/proteins/the-only-protein-in-the-world')
+        self.assertTemplateUsed(response, 'setup.html')
+
+    def test_displays_protein_id(self):
+        response = self.client.get('/proteins/the-only-protein-in-the-world/')
+        expected_html = render_to_string('setup.html')
+        self.assertContains(response, expected_html)
