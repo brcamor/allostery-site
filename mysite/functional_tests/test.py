@@ -19,10 +19,14 @@ class NewVisitorTest(unittest.TestCase):
         self.browser.get('http://localhost:8000')
 
         # He notices the page title and header mention allosteric 
-        # site and pathway prediction
+        # site prediction
         self.assertIn('Allosteric', self.browser.title)
+        self.assertIn('site', self.browser.title)
+        self.assertIn('prediction', self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('Allosteric', header_text)
+        self.assertIn('site', header_text)
+        self.assertIn('prediction', header_text)
 
         # He is invited to enter a PDB ID number 
         inputbox = self.browser.find_element_by_id('id_pdb_id')
@@ -48,6 +52,6 @@ class NewVisitorTest(unittest.TestCase):
         # He notices the button saying "Download results" and clicks this - a
         # selection of files are downloaded to his computer and 
 
-        # Satisifed he decides that the developer of the site should be
+        # Satisfied, he decides that the developer of the site should be
         # nominated for a Nobel Prize
 
