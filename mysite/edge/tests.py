@@ -33,7 +33,7 @@ class ProteinSetupTest(TestCase):
         response = self.client.get('/proteins/the-only-protein-in-the-world')
         self.assertTemplateUsed(response, 'setup.html')
 
-    def test_displays_protein_id(self):
+    def test_displays_protein_name(self):
         response = self.client.get('/proteins/the-only-protein-in-the-world/')
         expected_html = render_to_string('setup.html')
         self.assertContains(response, expected_html)
