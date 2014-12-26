@@ -1,0 +1,7 @@
+Django==1.7.1
+decorator==3.4.0
+networkx==1.9.1
+numpy==1.9.1
+rpy2==2.5.4
+scipy==0.14.0
+selenium==2.44.0

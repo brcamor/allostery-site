@@ -25,7 +25,7 @@ class HomePageTest(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], '/proteins/the-only-protein-in-the-world')
-
+        self.assertEqual(response.session['pdb_id'], '1SC1')
 
 class ProteinSetupTest(TestCase):
 
