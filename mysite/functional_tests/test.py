@@ -47,12 +47,11 @@ class NewVisitorTest(LiveServerTestCase):
         time.sleep(2)
         
         header_text = self.browser.find_element_by_tag_name('h1').text
-        self.assertEqual('Protein Set-up', header_text)
+        self.assertEqual('Protein Set-up: 1SC1', header_text)
         
         table = self.browser.find_element_by_id('id_protein_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('1SC1', [row.text for row in rows])
-        self.assertIn('INTERLUEKIN', [row.text for row in rows])
+        self.assertIn('1: INTERLEUKIN-', [row.text for row in rows])
 
         pdb_url = self.browser.current_url
         self.assertRegexpMatches(pdb_url, '/proteins/1SC1/.+')

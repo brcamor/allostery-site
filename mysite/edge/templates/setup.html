@@ -3,9 +3,11 @@
     <title>Allosteric site prediction</title>
   </head>
   <body>
-    <h1>Protein Set-up</h1>
+    <h1>Protein Set-up: {{ pdb_id }}</h1>
     <table id="id_protein_table" class="table" >
-      <tr><td>{{ pdb_id }}</td></tr>
+      {% for item in pdb_name %}
+      <tr><td>{{ forloop.counter }}: {{ item }}</td></tr>
+      {% endfor %}
 </table>
   </body>
 </html>
