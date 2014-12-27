@@ -10,5 +10,5 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', 'edge.views.home_page', name='home'),
-    url(r'^proteins/the-only-protein-in-the-world', 'edge.views.protein_setup', name='setup')
+    url(r'^proteins/the-only-protein-in-the-world', 'edge.views.chain_setup', name='setup')
 )

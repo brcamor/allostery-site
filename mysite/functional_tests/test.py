@@ -25,15 +25,13 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertIn('site', self.browser.title)
         self.assertIn('prediction', self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
-        self.assertIn('Allosteric', header_text)
-        self.assertIn('site', header_text)
-        self.assertIn('prediction', header_text)
-
+        self.assertIn('Start a new protein analysis', header_text)
+        
         # He is invited to enter a PDB ID number 
         inputbox = self.browser.find_element_by_id('id_pdb_id')
         self.assertEqual(
             inputbox.get_attribute('placeholder'),
-            'PDB ID'
+            'Enter PDB ID here'
             )
 
         # He types "1SC1" into a text box
@@ -50,8 +48,14 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertEqual('Protein Set-up: 1SC1', header_text)
         
         table = self.browser.find_element_by_id('id_protein_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('1: INTERLEUKIN-', [row.text for row in rows])
+        rows = table.find_elements_by_tag_name('td')
+        row_text = [row.text for row in rows]
+        self.assertEqual('Molecule name', row_text[0])
+        self.assertEqual('Chain', row_text[1])
+        self.assertEqual('1: INTERLEUKIN-1 BETA CONVERTASE', row_text[2])
+        self.assertEqual('A', row_text[3])
+        self.assertEqual('2: INTERLEUKIN-1 BETA CONVERTASE', row_text[4])
+        self.assertEqual('B', row_text[5])
 
         pdb_url = self.browser.current_url
         self.assertRegexpMatches(pdb_url, '/proteins/1SC1/.+')

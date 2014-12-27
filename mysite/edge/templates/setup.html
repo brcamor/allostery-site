@@ -1,13 +1,16 @@
-<html>
-  <head>
-    <title>Allosteric site prediction</title>
-  </head>
-  <body>
-    <h1>Protein Set-up: {{ pdb_id }}</h1>
-    <table id="id_protein_table" class="table" >
-      {% for item in pdb_name %}
-      <tr><td>{{ forloop.counter }}: {{ item }}</td></tr>
-      {% endfor %}
+{% extends 'base.html' %}
+
+{% block header_text %} Protein Set-up: {{ pdb_id }} {% endblock %}
+
+{% block header_sub_text %}
+Select the chains you would like to include in the analysis 
+{% endblock %}
+
+{% block table %}
+<table id="id_protein_table" class="table" >
+  <tr><td>Molecule name</td><td>Chain</td>
+    {% for item in chain_map %}
+  <tr><td>{{ forloop.counter }}: {{ item.0 }}</td><td>{{ item.1 }}</td></tr>
+  {% endfor %}
 </table>
-  </body>
-</html>
+{% endblock %}

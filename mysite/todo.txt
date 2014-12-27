@@ -1,4 +1,7 @@
 Change URL from /the-only-protein-in-the-world to be /PDB_ID
-Get molecule names properly from COMPND entries
 
-Prettify using bootstrap
+Implement selection of chains in setup page
+
+New view for selection of source residues
+
+HETATM not the same as 

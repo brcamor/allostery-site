@@ -1,12 +1,15 @@
-<html>
-  <head>
-    <title>Allosteric site prediction</title>
-  </head>
-  <body>
-    <h1>Allosteric site prediction</h1>
+{% extends 'base.html' %}
+{% block header_text %} Start a new protein analysis {% endblock %}
+
+{% block header_sub_text%}
+To begin the analysis, enter the 4-digit PDB ID of the structure you would like to analyse
+{% endblock %}
+
+{% block form %}
     <form method="POST">
-      <input name="pdb_id", id="id_pdb_id", placeholder="PDB ID"></input>
+      <input name="pdb_id" id="id_pdb_id" 
+	     placeholder="Enter PDB ID here"
+	     class="form-control input-lg"/>
       {% csrf_token %}
     </form>
-  </body>
-</html>
+ {% endblock %}
