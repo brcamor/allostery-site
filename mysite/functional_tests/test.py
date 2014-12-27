@@ -34,8 +34,8 @@ class NewVisitorTest(LiveServerTestCase):
             'Enter PDB ID here'
             )
 
-        # He types "1SC1" into a text box
-        inputbox.send_keys('1SC1')
+        # He types "2HBQ" into a text box
+        inputbox.send_keys('2HBQ')
 
         # When he hits enter he is taken to a new URL, the page now
         # shows the name of the protein he wants to analyse (caspase-1)
@@ -45,24 +45,35 @@ class NewVisitorTest(LiveServerTestCase):
         import time
         time.sleep(2)
         
+        pdb_url = self.browser.current_url
+        self.assertRegexpMatches(pdb_url, '/proteins/1SC1/chains')
+
         header_text = self.browser.find_element_by_tag_name('h1').text
-        self.assertEqual('Protein Set-up: 1SC1', header_text)
+        self.assertEqual('Protein Set-up: 2HBQ', header_text)
         
         table = self.browser.find_element_by_id('id_protein_table')
         rows = table.find_elements_by_tag_name('td')
         row_text = [row.text for row in rows]
         self.assertEqual('Molecule name', row_text[0])
         self.assertEqual('Chain', row_text[1])
-        self.assertEqual('1: INTERLEUKIN-1 BETA CONVERTASE', row_text[2])
-        self.assertEqual('A', row_text[3])
-        self.assertEqual('2: INTERLEUKIN-1 BETA CONVERTASE', row_text[4])
-        self.assertEqual('B', row_text[5])
+        self.assertEqual('Selected', row_text[2])
+        self.assertEqual('1: CASPASE-1', row_text[3])
+        self.assertEqual('A', row_text[4])
+        self.assertEqual('2: CASPASE-1INTERLEUKIN-1 BETA CONVERTASE', row_text[6])
+        self.assertEqual('B', row_text[7])
+        self.assertEqual('3: N-[(BENZYLOXY)CARBONYL]-L-VALYL-N-[(2S)-1-CARBOXY-4-FLUORO',
+                         row_text[9])
+        self.assertEqual('C', row_text[10])
 
-        pdb_url = self.browser.current_url
-        self.assertRegexpMatches(pdb_url, '/proteins/1SC1/.+')
+        # He also notices that there are checkboxes where he can select the chains he
+        # wants to include in the analysis.  He selects all three checkboxes and hits
+        # 'Next'.  This takes him to a new URL, which shows him the HETATM entries in
+        # the pdb file
 
-        # Now he hits "Run" and is taken to a new URL where there is a JMol
-        # applet showing the protein coloured by quantile scores
+
+        # Now he selects selects both chains and clicks "Next", he is taken to
+        # a new page where he is shown a list of the molecules in the protein
+        # There are is 
 
         # He notices the button saying "Download results" and clicks this - a
         # selection of files are downloaded to his computer and 
