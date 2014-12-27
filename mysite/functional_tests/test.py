@@ -39,7 +39,8 @@ class NewVisitorTest(LiveServerTestCase):
 
         # When he hits enter he is taken to a new URL, the page now
         # shows the name of the protein he wants to analyse (caspase-1)
-               
+        # and a list of the chains in the pdb file
+
         inputbox.send_keys(Keys.ENTER)
         import time
         time.sleep(2)

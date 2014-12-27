@@ -4,4 +4,4 @@ Implement selection of chains in setup page
 
 New view for selection of source residues
 
-HETATM not the same as 
+HETATM not the same as chain - need a HETATM selection page

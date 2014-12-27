@@ -1,14 +1,15 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-import proteinnetwork as pn
+#import proteinnetwork as pn
 import requests 
 from django.conf import settings
 from utils.pdb_interact import get_pdb_name 
 
 def home_page(request):
     if request.method == 'POST':
-        request.session['pdb_id'] = request.POST['pdb_id']
-        return redirect('/proteins/the-only-protein-in-the-world', )
+        pdb_id = request.POST['pdb_id']
+        request.session['pdb_id'] = pdb_id
+        return redirect('/proteins/' + pdb_id + '/chains')
     return render(request, 'home.html')
 
 def chain_setup(request):
@@ -27,7 +28,7 @@ def chain_setup(request):
 
         return render(
             request, 
-            'setup.html', 
+            'chain_setup.html', 
             {'pdb_id' : pdb_id, 'chain_map' : chain_map}
         )
         

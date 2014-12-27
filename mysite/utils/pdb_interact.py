@@ -10,10 +10,11 @@ def get_pdb_name(pdb_file_loc):
             if len(stripped_line) > 2 and stripped_line[2] == 'MOLECULE:':
                 names.append(' '.join(stripped_line[3:])[:-1])
             if len(stripped_line) > 2 and stripped_line[2] == 'CHAIN:':
-                chains.append(' '.join(stripped_line[3:])[:-1])
+                chains.append(' '.join(stripped_line[3:])[:-1].split(', '))
     
     chain_map = []
     for i, name in enumerate(names):
-        chain_map.append((name, chains[i]))
+        for chain in chains[i]:
+            chain_map.append((name, chain))
 
     return chain_map
