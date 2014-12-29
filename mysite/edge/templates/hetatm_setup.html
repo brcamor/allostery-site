@@ -3,17 +3,17 @@
 {% block header_text %} Protein Set-up: {{ pdb_id }} {% endblock %}
 
 {% block header_sub_text %}
-Select the ligands you would like to include in the analysis 
+Select the heteroatoms you would like to include in the analysis 
 {% endblock %}
 
 {% block table %}
 
 <form role="form" method="POST" action="">
   <table class="table" id="id_ligand_table">
-    <tr><th>Ligand</th><th>Selected</th></tr>
-      {% for item in ligands %}
-        <tr><td>{{ forloop.counter }}: {{ item }}</td>
-            <td><input type="checkbox" id="chain_checkbox_{{forloop.counter}}" name="chains" value="{{item.1}}"></td></tr>
+    <tr><th>Name</th><th>Chain</th><th>Number</th><th>Selected</th></tr>
+      {% for item in hetatms %}
+        <tr><td>{{ forloop.counter }}: {{ item.0 }}</td><td>{{item.1}}</td><td>{{item.2}}</td>
+            <td><input type="checkbox" id="hetatms_checkbox_{{forloop.counter}}" name="chains" value="{{item.1}}"></td></tr>
       {% endfor %}
   </table>
   

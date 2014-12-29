@@ -12,5 +12,5 @@ urlpatterns = patterns('',
     url(r'^$', 'edge.views.home_page', name='home'),
     url(r'^chains', 'edge.views.chain_setup', name='chain_setup'), 
     url(r'^proteins/[^/]+/chains', 'edge.views.chain_setup', name='chain_setup'), 
-    url(r'^ligands', 'edge.views.ligand_setup', name='ligand_setup')
+    url(r'^hetatms', 'edge.views.hetatm_setup', name='hetatm_setup')
 )

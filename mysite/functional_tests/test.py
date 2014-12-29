@@ -96,14 +96,14 @@ class NewVisitorTest(LiveServerTestCase):
         time.sleep(2)
         
         pdb_url = self.browser.current_url
-        self.assertRegexpMatches(pdb_url, '/ligands')
+        self.assertRegexpMatches(pdb_url, '/hetatms')
 
         header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertEqual('Protein Set-up: 2HBQ', header_text)
 
         header_lead_text = self.browser.find_element_by_id('header_lead').text
         self.assertEqual(
-            'Select the ligands you would like to include in the analysis', 
+            'Select the heteroatoms you would like to include in the analysis', 
             header_lead_text
         )
         
@@ -111,13 +111,20 @@ class NewVisitorTest(LiveServerTestCase):
         
         table_headers = table.find_elements_by_tag_name('th')
         table_header_text = [header.text for header in table_headers]
-        self.assertEqual('Ligand', table_header_text[0])
-        self.assertEqual('Selected', table_header_text[1])
+        self.assertEqual('Name', table_header_text[0])
+        self.assertEqual('Chain', table_header_text[1])
+        self.assertEqual('Number', table_header_text[2])
+        self.assertEqual('Selected', table_header_text[3])
 
         rows = table.find_elements_by_tag_name('td')
         row_text = [row.text for row in rows]
-        self.assertEqual('1: PHQ', row_text[0])
-        self.assertEqual('2: CF0', row_text[2])
+        self.assertEqual('1: CF0', row_text[0])
+        self.assertEqual('C', row_text[1])
+        self.assertEqual('5', row_text[2])
+        
+        self.assertEqual('2: PHQ', row_text[4])
+        self.assertEqual('C', row_text[5])
+        self.assertEqual('1', row_text[6])
 
         # He notices the button saying "Download results" and clicks this - a
         # selection of files are downloaded to his computer and 

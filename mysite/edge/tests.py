@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.core.urlresolvers import resolve
-from edge.views import home_page, chain_setup, ligand_setup
+from edge.views import home_page, chain_setup, hetatm_setup
 from django.http import HttpRequest
 from django.http.request import QueryDict
 from django.template.loader import render_to_string
@@ -68,7 +68,7 @@ class ProteinChainSetupTest(TestCase):
         print request.session['chains']
         self.assertEqual(request.session.get('chains')[0], ['A', 'B'])
 
-class ProteinLigandSetupTest(TestCase):
+class ProteinHetatmSetupTest(TestCase):
 
     def setUp(self):
         self.engine = import_module(settings.SESSION_ENGINE)
@@ -78,23 +78,24 @@ class ProteinLigandSetupTest(TestCase):
         request = HttpRequest()
         request.method = 'GET'
         request.session = self.engine.SessionStore(None)
-        request.session['pdb_id'] = '1SC1'
-        request.session['chains'] = ['A', 'B']
+        request.session['pdb_id'] = '2HBQ'
+        request.session['chains'] = ['A', 'B', 'C']
 
-        response = ligand_setup(request)
+        response = hetatm_setup(request)
 
-        self.assertTemplateUsed(response, 'ligand_setup.html')
+        self.assertTemplateUsed(response, 'hetatm_setup.html')
 
     def test_ligand_setup_finds_all_ligands_correctly(self):
         request = HttpRequest()
         request.method = 'GET'
         request.session = self.engine.SessionStore(None)
-        request.session['pdb_id'] = '1SC1'
-        request.session['chains'] = ['A', 'B']
+        request.session['pdb_id'] = '2HBQ'
+        request.session['chains'] = ['A', 'B', 'C']
         
-        response = ligand_setup(request)
+        response = hetatm_setup(request)
         
-        self.assertEqual(request.session.get('ligands'), ['PHQ', 'CF0'])
+        self.assertIn(('PHQ', 'C', '1'), request.session.get('hetatms'))
+        self.assertIn(('CF0', 'C', '5'), request.session.get('hetatms'))
 
     def test_ligand_setup_saves_included_ligands_correctly(self):
         request = HttpRequest()
@@ -102,13 +103,13 @@ class ProteinLigandSetupTest(TestCase):
         request.session = self.engine.SessionStore(None)
         request.session['pdb_id'] = '1SC1'
         request.session['chains'] = ['A', 'B']
-        request.session['ligands'] = ['PHQ', 'CF0']
+        request.session['hetatms'] = []
 
-        _dict = {'included_ligands' : ['PHQ',]}
+        _dict = {'included_hetatms' : ['PHQ',]}
         _qdict = QueryDict('', mutable=True)
         _qdict.update(_dict)
         request.POST = _qdict
 
-        response = ligand_setup(request)
+        response = hetatm_setup(request)
 
-        self.assertEqual(request.session.get('included_ligands')[0], ['PHQ',])
+        self.assertEqual(request.session.get('included_hetatms')[0], ['PHQ',])

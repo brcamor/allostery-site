@@ -16,7 +16,7 @@ def home_page(request):
 def chain_setup(request):
     if request.method == 'POST':
         request.session['chains'] = request.POST.getlist('chains')
-        return redirect('/ligands')
+        return redirect('/hetatms')
     else:
         pdb_id = request.session.get('pdb_id')
         if pdb_id:
@@ -39,7 +39,7 @@ def chain_setup(request):
         else:
             return redirect('/')
 
-def ligand_setup(request):
+def hetatm_setup(request):
     
     if request.method == 'POST':
         pass
@@ -51,11 +51,11 @@ def ligand_setup(request):
         if pdb_id and chains:
             pdb_file_name = settings.MEDIA_ROOT + '/' + pdb_id + '.pdb'
             hetatms = get_hetatms(pdb_file_name)
-            request.session['ligands'] = hetatms
+            request.session['hetatms'] = hetatms
 
             return render(
                 request, 
-                'ligand_setup.html', 
+                'hetatm_setup.html', 
                 {'pdb_id' : pdb_id, 'hetatms' : hetatms}
             )
         
