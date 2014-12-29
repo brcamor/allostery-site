@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-#import proteinnetwork as pn
+import proteinnetwork as pn
 import requests 
 from django.conf import settings
 from utils.pdb_interact import get_chains, get_hetatms
@@ -48,8 +48,12 @@ def hetatm_setup(request):
         included_hetatms = []
         for idx in included_hetatms_idx:
             included_hetatms.append(hetatms[int(idx)-1])
+        removed_hetatms = [hetatm for hetatm in hetatms
+                           if hetatm not in included_hetatms]
 
         request.session['included_hetatms'] = included_hetatms
+        request.session['removed_hetatms'] = removed_hetatms
+
         return redirect('/source')
 
     else:
@@ -71,4 +75,22 @@ def hetatm_setup(request):
             return redirect('/')
 
 def source_setup(request):
-    return render(request, 'source_setup.html')
+    
+    if request.method == 'POST':
+        pass
+    else:
+        pdb_id = request.session.get('pdb_id')
+        chains = request.session.get('chains')
+        pdb_file_name = settings.MEDIA_ROOT + '/' + pdb_id + '.pdb'
+
+        protein = pn.molecules.Protein()
+        parser = pn.parsing.PDBParser(pdb_file_name)
+        parser.parse(protein, strip=('HOH',), chain=chains)
+        return render(
+            request,
+            'source_setup.html',
+            {
+                'pdb_id' : request.session['pdb_id'],
+                'residues': protein.residues.keys(),
+            }
+        )

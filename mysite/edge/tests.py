@@ -6,6 +6,7 @@ from django.http.request import QueryDict
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.utils.importlib import import_module
+import proteinnetwork as pn
 import urllib
 
 class HomePageTest(TestCase):
@@ -114,6 +115,24 @@ class ProteinHetatmSetupTest(TestCase):
 
         self.assertEqual(request.session.get('included_hetatms')[0], ('PHQ', 'C', '1'))
 
+    def test_hetatm_setup_POST_redirects_to_source_setup(self):
+        request = HttpRequest()
+        request.method = 'POST'
+        request.session = self.engine.SessionStore(None)
+        request.session['pdb_id'] = '1SC1'
+        request.session['chains'] = ['A', 'B']
+        request.session['hetatms'] = [('PHQ', 'C', '1'), ('CF0', 'C', '5')]
+        
+        _dict = {'hetatms' : '1'}
+        _qdict = QueryDict('', mutable=True)
+        _qdict.update(_dict)
+        request.POST = _qdict
+
+        response = hetatm_setup(request)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/source')
+
 class ProteinSourceSetupTest(TestCase):
 
     def setUp(self):
@@ -123,7 +142,10 @@ class ProteinSourceSetupTest(TestCase):
         
         request = HttpRequest()
         request.method = 'GET'
-        
+        request.session = self.engine.SessionStore(None)
+        request.session['pdb_id'] = '1SC1'
+        request.session['chains'] = ['A', 'B']
+
         response = source_setup(request)
         
         self.assertTemplateUsed(response, 'source_setup.html')
