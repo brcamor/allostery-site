@@ -151,7 +151,19 @@ class NewVisitorTest(LiveServerTestCase):
         )
         
         table = self.browser.find_element_by_id('id_source_table')
-        
+        headers = table.find_elements_by_tag_name('th')
+        header_text = [header.text for header in headers]
+        self.assertIn('Residue number', header_text)
+        self.assertIn('Chain', header_text)
+        self.assertIn('Selected', header_text)
+
+        rows = table.find_elements_by_tag_name('td')
+        row_text = [row.text for row in rows]
+        self.assertEqual('125', row_text[0])
+        self.assertEqual('A', row_text[1])
+        self.assertEqual('C', row_text[-2])
+        self.assertEqual('5', row_text[-3])
+
 
         # He notices the button saying "Download results" and clicks this - a
         # selection of files are downloaded to his computer.

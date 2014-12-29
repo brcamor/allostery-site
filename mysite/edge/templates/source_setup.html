@@ -10,17 +10,14 @@ Select the residues you would like to use as the source in the analysis
 
 <form role="form" method="POST" action="">
   <table class="table" id="id_source_table">
-    
+    <th>Residue number</th><th>Chain</th><th>Selected</th>
+    {% for residue in residues %}
+    <tr>
+    <td>{{ residue.0 }}</td><td>{{ residue.1 }}</td>
+    <td><input type="checkbox" id="residue_checkbox_{{forloop.counter}}" name="hetatms" value="{{forloop.counter}}"></td>
+    </tr>
+    {% endfor %}
   </table>
-  <h3>Included HETATMs:</h3>
-  {% for item in included_hetatms %}
-  <p>{{ item }}</p>
-  {% endfor %}
-  <h3>Removed HETATMs:</h3>
-  {% for item in removed_hetatms %}
-  <p>{{ item }}</p>
-  {% endfor %}
-
   {% csrf_token %}
   <input type="submit" class="btn btn-large btn-primary" id="continue_button" value="Continue">
 </form>

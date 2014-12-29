@@ -86,11 +86,15 @@ def source_setup(request):
         protein = pn.molecules.Protein()
         parser = pn.parsing.PDBParser(pdb_file_name)
         parser.parse(protein, strip=('HOH',), chain=chains)
+        residue_list = sorted(
+            protein.residues.keys(), 
+            key=lambda element: (element[1], int(element[0][0:3])))
+
         return render(
             request,
             'source_setup.html',
             {
                 'pdb_id' : request.session['pdb_id'],
-                'residues': protein.residues.keys(),
+                'residues': residue_list,
             }
         )
