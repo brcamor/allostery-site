@@ -13,7 +13,7 @@ Select the heteroatoms you would like to include in the analysis
     <tr><th>Name</th><th>Chain</th><th>Number</th><th>Selected</th></tr>
       {% for item in hetatms %}
         <tr><td>{{ forloop.counter }}: {{ item.0 }}</td><td>{{item.1}}</td><td>{{item.2}}</td>
-            <td><input type="checkbox" id="hetatm_checkbox_{{forloop.counter}}" name="hetatms" value="{{forloop.counter}}"></td></tr>
+            <td><input type="checkbox" id="hetatm_checkbox_{{forloop.counter}}" name="hetatms" value="{{item.0}}, {{item.1}}, {{item.2}}"></td></tr>
       {% endfor %}
   </table>
   

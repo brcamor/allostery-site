@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.core.urlresolvers import resolve
-from edge.views import home_page, chain_setup, hetatm_setup
+from edge.views import home_page, chain_setup, hetatm_setup, source_setup
 from django.http import HttpRequest
 from django.http.request import QueryDict
 from django.template.loader import render_to_string
@@ -73,7 +73,7 @@ class ProteinHetatmSetupTest(TestCase):
     def setUp(self):
         self.engine = import_module(settings.SESSION_ENGINE)
 
-    def test_ligand_setup_uses_correct_template(self):
+    def test_hetatm_setup_uses_correct_template(self):
         
         request = HttpRequest()
         request.method = 'GET'
@@ -85,7 +85,7 @@ class ProteinHetatmSetupTest(TestCase):
 
         self.assertTemplateUsed(response, 'hetatm_setup.html')
 
-    def test_ligand_setup_finds_all_ligands_correctly(self):
+    def test_hetatm_setup_finds_all_ligands_correctly(self):
         request = HttpRequest()
         request.method = 'GET'
         request.session = self.engine.SessionStore(None)
@@ -97,19 +97,33 @@ class ProteinHetatmSetupTest(TestCase):
         self.assertIn(('PHQ', 'C', '1'), request.session.get('hetatms'))
         self.assertIn(('CF0', 'C', '5'), request.session.get('hetatms'))
 
-    def test_ligand_setup_saves_included_ligands_correctly(self):
+    def test_hetatm_setup_saves_included_ligands_correctly(self):
         request = HttpRequest()
         request.method = 'POST'
         request.session = self.engine.SessionStore(None)
         request.session['pdb_id'] = '1SC1'
         request.session['chains'] = ['A', 'B']
-        request.session['hetatms'] = []
+        request.session['hetatms'] = [('PHQ', 'C', '1'), ('CF0', 'C', '5')]
 
-        _dict = {'included_hetatms' : ['PHQ',]}
+        _dict = {'hetatms' : '1'}
         _qdict = QueryDict('', mutable=True)
         _qdict.update(_dict)
         request.POST = _qdict
 
         response = hetatm_setup(request)
 
-        self.assertEqual(request.session.get('included_hetatms')[0], ['PHQ',])
+        self.assertEqual(request.session.get('included_hetatms')[0], ('PHQ', 'C', '1'))
+
+class ProteinSourceSetupTest(TestCase):
+
+    def setUp(self):
+        self.engine = import_module(settings.SESSION_ENGINE)
+        
+    def test_source_setup_uses_correct_template(self):
+        
+        request = HttpRequest()
+        request.method = 'GET'
+        
+        response = source_setup(request)
+        
+        self.assertTemplateUsed(response, 'source_setup.html')

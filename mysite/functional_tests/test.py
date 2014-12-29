@@ -87,9 +87,9 @@ class NewVisitorTest(LiveServerTestCase):
         # 'Continue'.  This takes him to a new URL, which shows him the HETATM entries in
         # the pdb file
 
-        check_box = self.browser.find_element_by_id('chain_checkbox_1').click()
-        check_box = self.browser.find_element_by_id('chain_checkbox_2').click()
-        check_box = self.browser.find_element_by_id('chain_checkbox_3').click()
+        self.browser.find_element_by_id('chain_checkbox_1').click()
+        self.browser.find_element_by_id('chain_checkbox_2').click()
+        self.browser.find_element_by_id('chain_checkbox_3').click()
 
         self.browser.find_element_by_id('continue_button').click()
         
@@ -107,7 +107,7 @@ class NewVisitorTest(LiveServerTestCase):
             header_lead_text
         )
         
-        table = self.browser.find_element_by_id('id_ligand_table')
+        table = self.browser.find_element_by_id('id_hetatm_table')
         
         table_headers = table.find_elements_by_tag_name('th')
         table_header_text = [header.text for header in table_headers]
@@ -125,6 +125,30 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertEqual('2: PHQ', row_text[4])
         self.assertEqual('C', row_text[5])
         self.assertEqual('1', row_text[6])
+
+        # He selects the HETATM entries he wants to include in the analysis and
+        # clicks the "Continue" button.  He is taken to a new URL which
+        # asks him to select the residues he would like to use as source atoms
+        # in the analysis
+
+        self.browser.find_element_by_id('hetatm_checkbox_1').click()
+        self.browser.find_element_by_id('hetatm_checkbox_2').click()
+       
+        self.browser.find_element_by_id('continue_button').click()
+
+        pdb_url = self.browser.current_url
+        self.assertRegexpMatches(pdb_url, '/source')
+
+        header_text = self.browser.find_element_by_tag_name('h1').text
+        self.assertEqual('Protein Set-up: 2HBQ', header_text)
+
+        header_lead_text = self.browser.find_element_by_id('header_lead').text
+        self.assertEqual(
+            'Select the residues you would like to include use as the source in the analysis', 
+            header_lead_text
+        )
+        
+        table = self.browser.find_element_by_id('id_source_table')
 
         # He notices the button saying "Download results" and clicks this - a
         # selection of files are downloaded to his computer and 

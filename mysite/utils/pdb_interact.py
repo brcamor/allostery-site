@@ -19,10 +19,12 @@ def get_chains(pdb_file_loc):
 
     return chain_map
 
-def get_hetatms(pdb_file_loc):
+def get_hetatms(pdb_file_loc, chains):
     hetatms= []
     with open(pdb_file_loc, 'r') as f:
         for line in f:
-            if line.startswith('HETATM') and not (line[17:21].strip() == 'HOH'):
+            if (line.startswith('HETATM') 
+                and not (line[17:21].strip() == 'HOH')
+                and line[21] in chains):
                 hetatms.append((line[17:21].strip(), line[21], line[22:27].strip()))
     return list(set(hetatms))

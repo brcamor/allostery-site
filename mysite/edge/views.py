@@ -3,7 +3,7 @@ from django.http import HttpResponse
 #import proteinnetwork as pn
 import requests 
 from django.conf import settings
-from utils.pdb_interact import get_chains, get_hetatms 
+from utils.pdb_interact import get_chains, get_hetatms
 
 def home_page(request):
     if request.method == 'POST':
@@ -42,7 +42,15 @@ def chain_setup(request):
 def hetatm_setup(request):
     
     if request.method == 'POST':
-        pass
+        hetatms = request.session['hetatms']
+        included_hetatms_idx = request.POST.getlist('hetatms')
+        print included_hetatms_idx
+        included_hetatms = []
+        for idx in included_hetatms_idx:
+            included_hetatms.append(hetatms[int(idx)-1])
+
+        request.session['included_hetatms'] = included_hetatms
+        return redirect('/source')
 
     else:
         pdb_id = request.session.get('pdb_id')
@@ -50,7 +58,7 @@ def hetatm_setup(request):
 
         if pdb_id and chains:
             pdb_file_name = settings.MEDIA_ROOT + '/' + pdb_id + '.pdb'
-            hetatms = get_hetatms(pdb_file_name)
+            hetatms = get_hetatms(pdb_file_name, chains)
             request.session['hetatms'] = hetatms
 
             return render(
@@ -61,3 +69,6 @@ def hetatm_setup(request):
         
         else:
             return redirect('/')
+
+def source_setup(request):
+    return render(request, 'source_setup.html')
