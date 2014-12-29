@@ -1,4 +1,4 @@
-def get_pdb_name(pdb_file_loc):
+def get_chains(pdb_file_loc):
     """ Extracts molecule names and corresponding chains from pdb
     file from the COMPND MOLECULE entries
     """
@@ -18,3 +18,6 @@ def get_pdb_name(pdb_file_loc):
             chain_map.append((name, chain))
 
     return chain_map
+
+def get_hetatms(pdb_file_loc):
+    pass

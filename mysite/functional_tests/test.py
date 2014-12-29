@@ -26,6 +26,13 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertIn('prediction', self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('Start a new protein analysis', header_text)
+
+        header_lead_text = self.browser.find_element_by_id('header_lead').text
+        self.assertEqual(
+            "To begin the analysis, enter the 4-digit PDB ID of the structure you would like to analyse", 
+            header_lead_text
+        )
+
         
         # He is invited to enter a PDB ID number 
         inputbox = self.browser.find_element_by_id('id_pdb_id')
@@ -46,34 +53,78 @@ class NewVisitorTest(LiveServerTestCase):
         time.sleep(2)
         
         pdb_url = self.browser.current_url
-        self.assertRegexpMatches(pdb_url, '/proteins/1SC1/chains')
+        self.assertRegexpMatches(pdb_url, '/chains')
 
         header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertEqual('Protein Set-up: 2HBQ', header_text)
+
+        header_lead_text = self.browser.find_element_by_id('header_lead').text
+        self.assertEqual(
+            'Select the chains you would like to include in the analysis', 
+            header_lead_text
+        )
+
+        table = self.browser.find_element_by_id('id_chain_table')
         
-        table = self.browser.find_element_by_id('id_protein_table')
+        table_headers = table.find_elements_by_tag_name('th')
+        table_header_text = [header.text for header in table_headers]
+        self.assertEqual('Molecule name', table_header_text[0])
+        self.assertEqual('Chain', table_header_text[1])
+        self.assertEqual('Selected', table_header_text[2])
+
         rows = table.find_elements_by_tag_name('td')
         row_text = [row.text for row in rows]
-        self.assertEqual('Molecule name', row_text[0])
-        self.assertEqual('Chain', row_text[1])
-        self.assertEqual('Selected', row_text[2])
-        self.assertEqual('1: CASPASE-1', row_text[3])
-        self.assertEqual('A', row_text[4])
-        self.assertEqual('2: CASPASE-1INTERLEUKIN-1 BETA CONVERTASE', row_text[6])
-        self.assertEqual('B', row_text[7])
+        self.assertEqual('1: CASPASE-1', row_text[0])
+        self.assertEqual('A', row_text[1])
+        self.assertEqual('2: CASPASE-1', row_text[3])
+        self.assertEqual('B', row_text[4])
         self.assertEqual('3: N-[(BENZYLOXY)CARBONYL]-L-VALYL-N-[(2S)-1-CARBOXY-4-FLUORO',
-                         row_text[9])
-        self.assertEqual('C', row_text[10])
+                         row_text[6])
+        self.assertEqual('C', row_text[7])
 
         # He also notices that there are checkboxes where he can select the chains he
         # wants to include in the analysis.  He selects all three checkboxes and hits
-        # 'Next'.  This takes him to a new URL, which shows him the HETATM entries in
+        # 'Continue'.  This takes him to a new URL, which shows him the HETATM entries in
         # the pdb file
 
+        check_box = self.browser.find_element_by_id('chain_checkbox_1').click()
+        check_box = self.browser.find_element_by_id('chain_checkbox_2').click()
+        check_box = self.browser.find_element_by_id('chain_checkbox_3').click()
 
-        # Now he selects selects both chains and clicks "Next", he is taken to
-        # a new page where he is shown a list of the molecules in the protein
-        # There are is 
+        self.browser.find_element_by_id('continue_button').click()
+        
+        time.sleep(2)
+        
+        pdb_url = self.browser.current_url
+        self.assertRegexpMatches(pdb_url, '/ligands')
+
+        header_text = self.browser.find_element_by_tag_name('h1').text
+        self.assertEqual('Protein Set-up: 2HBQ', header_text)
+
+        header_lead_text = self.browser.find_element_by_id('header_lead').text
+        self.assertEqual(
+            'Select the ligands you would like to include in the analysis', 
+            header_lead_text
+        )
+        
+        table = self.browser.find_element_by_id('id_chain_table')
+        
+        table_headers = table.find_elements_by_tag_name('th')
+        table_header_text = [header.text for header in table_headers]
+        self.assertEqual('Molecule name', table_header_text[0])
+        self.assertEqual('Chain', table_header_text[1])
+        self.assertEqual('Selected', table_header_text[2])
+
+        rows = table.find_elements_by_tag_name('td')
+        row_text = [row.text for row in rows]
+        self.assertEqual('1: CASPASE-1', row_text[0])
+        self.assertEqual('A', row_text[1])
+        self.assertEqual('2: CASPASE-1', row_text[3])
+        self.assertEqual('B', row_text[4])
+        self.assertEqual('3: N-[(BENZYLOXY)CARBONYL]-L-VALYL-N-[(2S)-1-CARBOXY-4-FLUORO',
+                         row_text[6])
+        self.assertEqual('C', row_text[7])
+
 
         # He notices the button saying "Download results" and clicks this - a
         # selection of files are downloaded to his computer and 
