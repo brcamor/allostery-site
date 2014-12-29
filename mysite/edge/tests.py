@@ -2,9 +2,11 @@ from django.test import TestCase
 from django.core.urlresolvers import resolve
 from edge.views import home_page, chain_setup, ligand_setup
 from django.http import HttpRequest
+from django.http.request import QueryDict
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.utils.importlib import import_module
+import urllib
 
 class HomePageTest(TestCase):
 
@@ -25,19 +27,19 @@ class ProteinChainSetupTest(TestCase):
         
     def test_chain_setup_uses_correct_template(self):
         request = HttpRequest()
-        request.method = 'POST'
-        request.POST['pdb_id'] = '1SC1'
+        request.method = 'GET'
         request.session = self.engine.SessionStore(None)
-        
+        request.session['pdb_id'] = '1SC1'
+
         response = chain_setup(request)
         
         self.assertTemplateUsed(response, 'chain_setup.html')
 
     def test_chain_setup_returns_correct_html(self):
         request = HttpRequest()
-        request.method = 'POST'
-        request.POST['pdb_id'] = '1SC1'
+        request.method = 'GET'
         request.session = self.engine.SessionStore(None)
+        request.session['pdb_id'] = '1SC1'
 
         response = chain_setup(request)
 
@@ -52,6 +54,20 @@ class ProteinChainSetupTest(TestCase):
 
         self.assertEqual(response.content.decode(), expected_html)
         
+    def test_chain_setup_saves_chains_correctly(self):
+        request = HttpRequest()
+        request.method = 'POST'
+        request.session = self.engine.SessionStore(None)
+        request.session['pdb_id'] = '1SC1'
+        _dict = {'chains' : ['A', 'B']}
+        _qdict = QueryDict('', mutable=True)
+        _qdict.update(_dict)
+        request.POST = _qdict
+
+        response = chain_setup(request)
+        print request.session['chains']
+        self.assertEqual(request.session.get('chains')[0], ['A', 'B'])
+
 class ProteinLigandSetupTest(TestCase):
 
     def setUp(self):
@@ -60,13 +76,39 @@ class ProteinLigandSetupTest(TestCase):
     def test_ligand_setup_uses_correct_template(self):
         
         request = HttpRequest()
-        request.method = 'POST'
-        request.POST['chains'] = ['A', 'B']
+        request.method = 'GET'
         request.session = self.engine.SessionStore(None)
         request.session['pdb_id'] = '1SC1'
+        request.session['chains'] = ['A', 'B']
 
         response = ligand_setup(request)
 
         self.assertTemplateUsed(response, 'ligand_setup.html')
 
+    def test_ligand_setup_finds_all_ligands_correctly(self):
+        request = HttpRequest()
+        request.method = 'GET'
+        request.session = self.engine.SessionStore(None)
+        request.session['pdb_id'] = '1SC1'
+        request.session['chains'] = ['A', 'B']
         
+        response = ligand_setup(request)
+        
+        self.assertEqual(request.session.get('ligands'), ['PHQ', 'CF0'])
+
+    def test_ligand_setup_saves_included_ligands_correctly(self):
+        request = HttpRequest()
+        request.method = 'POST'
+        request.session = self.engine.SessionStore(None)
+        request.session['pdb_id'] = '1SC1'
+        request.session['chains'] = ['A', 'B']
+        request.session['ligands'] = ['PHQ', 'CF0']
+
+        _dict = {'included_ligands' : ['PHQ',]}
+        _qdict = QueryDict('', mutable=True)
+        _qdict.update(_dict)
+        request.POST = _qdict
+
+        response = ligand_setup(request)
+
+        self.assertEqual(request.session.get('included_ligands')[0], ['PHQ',])

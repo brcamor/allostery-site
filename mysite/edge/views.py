@@ -20,7 +20,6 @@ def chain_setup(request):
     else:
         pdb_id = request.session.get('pdb_id')
         if pdb_id:
-            request.session['pdb_id'] = pdb_id
             pdb_file_name = settings.MEDIA_ROOT + '/' + pdb_id + '.pdb'
             
             # Retrieve the PDB file from the RSC website and save in media folder
@@ -52,6 +51,8 @@ def ligand_setup(request):
         if pdb_id and chains:
             pdb_file_name = settings.MEDIA_ROOT + '/' + pdb_id + '.pdb'
             hetatms = get_hetatms(pdb_file_name)
+            request.session['ligands'] = hetatms
+
             return render(
                 request, 
                 'ligand_setup.html', 

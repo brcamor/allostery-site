@@ -107,24 +107,17 @@ class NewVisitorTest(LiveServerTestCase):
             header_lead_text
         )
         
-        table = self.browser.find_element_by_id('id_chain_table')
+        table = self.browser.find_element_by_id('id_ligand_table')
         
         table_headers = table.find_elements_by_tag_name('th')
         table_header_text = [header.text for header in table_headers]
-        self.assertEqual('Molecule name', table_header_text[0])
-        self.assertEqual('Chain', table_header_text[1])
-        self.assertEqual('Selected', table_header_text[2])
+        self.assertEqual('Ligand', table_header_text[0])
+        self.assertEqual('Selected', table_header_text[1])
 
         rows = table.find_elements_by_tag_name('td')
         row_text = [row.text for row in rows]
-        self.assertEqual('1: CASPASE-1', row_text[0])
-        self.assertEqual('A', row_text[1])
-        self.assertEqual('2: CASPASE-1', row_text[3])
-        self.assertEqual('B', row_text[4])
-        self.assertEqual('3: N-[(BENZYLOXY)CARBONYL]-L-VALYL-N-[(2S)-1-CARBOXY-4-FLUORO',
-                         row_text[6])
-        self.assertEqual('C', row_text[7])
-
+        self.assertEqual('1: PHQ', row_text[0])
+        self.assertEqual('2: CF0', row_text[2])
 
         # He notices the button saying "Download results" and clicks this - a
         # selection of files are downloaded to his computer and 
