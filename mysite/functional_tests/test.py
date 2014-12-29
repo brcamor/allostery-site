@@ -164,9 +164,27 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertEqual('C', row_text[-2])
         self.assertEqual('5', row_text[-3])
 
+        # He selects the first few residues as his source (125-128 in chain A)
+        # and clicks "Continue".  He is taken to a new url "results" where is
+        # told that the results are being processed and that the page will
+        # refresh when the computations have finished
+
+        self.browser.find_element_by_id('residue_checkbox_1').click()
+        self.browser.find_element_by_id('residue_checkbox_2').click()
+        self.browser.find_element_by_id('residue_checkbox_3').click()
+        self.browser.find_element_by_id('residue_checkbox_4').click()
+
+        self.browser.find_element_by_id('continue_button').click()
+
+        time.sleep(2)
+
+        pdb_url = self.browser.current_url
+        self.assertRegexpMatches(pdb_url, '/results')
+
 
         # He notices the button saying "Download results" and clicks this - a
         # selection of files are downloaded to his computer.
+        
 
         # Satisfied, he decides that the developer of the site should be
         # nominated for a Nobel Prize

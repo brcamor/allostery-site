@@ -44,7 +44,6 @@ def hetatm_setup(request):
     if request.method == 'POST':
         hetatms = request.session['hetatms']
         included_hetatms_idx = request.POST.getlist('hetatms')
-        print included_hetatms_idx
         included_hetatms = []
         for idx in included_hetatms_idx:
             included_hetatms.append(hetatms[int(idx)-1])
@@ -77,7 +76,15 @@ def hetatm_setup(request):
 def source_setup(request):
     
     if request.method == 'POST':
-        pass
+        residues = request.session.get('residue_list')
+        source_residues_idx = request.POST.getlist('residues')
+        source_residues = []
+        for idx in source_residues_idx:
+            source_residues.append(residues[int(idx)-1])
+        request.session['source_residues'] = source_residues
+
+        return redirect('/results')
+
     else:
         pdb_id = request.session.get('pdb_id')
         chains = request.session.get('chains')
@@ -89,6 +96,7 @@ def source_setup(request):
         residue_list = sorted(
             protein.residues.keys(), 
             key=lambda element: (element[1], int(element[0][0:3])))
+        request.session['residue_list'] = residue_list
 
         return render(
             request,
