@@ -1,6 +1,10 @@
 from django.test import TestCase
 from django.core.urlresolvers import resolve
-from edge.views import home_page, chain_setup, hetatm_setup, source_setup
+from edge.views import (home_page,
+                        chain_setup,
+                        hetatm_setup, 
+                        source_setup, 
+                        results) 
 from django.http import HttpRequest
 from django.http.request import QueryDict
 from django.template.loader import render_to_string
@@ -33,8 +37,8 @@ class ProteinChainSetupTest(TestCase):
         request.session['pdb_id'] = '1SC1'
 
         response = chain_setup(request)
-        
-        self.assertTemplateUsed(response, 'chain_setup.html')
+ 
+        self.assertTemplateUsed(response, ' chain_setup.html')
 
     def test_chain_setup_returns_correct_html(self):
         request = HttpRequest()
@@ -105,14 +109,14 @@ class ProteinHetatmSetupTest(TestCase):
         request.session['chains'] = ['A', 'B', 'C']
         request.session['hetatms'] = [('PHQ', 'C', '1'), ('CF0', 'C', '5')]
 
-        _dict = {'hetatms' : '1'}
+        _dict = {'hetatms' : '0'}
         _qdict = QueryDict('', mutable=True)
         _qdict.update(_dict)
         request.POST = _qdict
 
         response = hetatm_setup(request)
 
-        self.assertEqual(request.session.get('included_hetatms')[0], ('PHQ', 'C', '1'))
+        self.assertIn(('PHQ', 'C', '1'), request.session.get('included_hetatms'))
 
     def test_hetatm_setup_POST_redirects_to_source_setup(self):
         request = HttpRequest()
@@ -122,7 +126,7 @@ class ProteinHetatmSetupTest(TestCase):
         request.session['chains'] = ['A', 'B', 'C']
         request.session['hetatms'] = [('PHQ', 'C', '1'), ('CF0', 'C', '5')]
         
-        _dict = {'hetatms' : '1'}
+        _dict = {'hetatms' : '0'}
         _qdict = QueryDict('', mutable=True)
         _qdict.update(_dict)
         request.POST = _qdict
@@ -149,6 +153,24 @@ class ProteinSourceSetupTest(TestCase):
         
         self.assertTemplateUsed(response, 'source_setup.html')
 
+    def test_source_setup_shows_only_selected_chains_and_hetams(self):
+        request = HttpRequest()
+        request.method = 'GET'
+        request.session = self.engine.SessionStore(None)
+        request.session['pdb_id'] = '2HBQ'
+        request.session['chains'] = ['B', 'C']
+        request.session['included_hetatms'] = [('PHQ', 'C', '1'), ]
+        request.session['removed_hetatms'] = [('CF0', 'C', '5')]
+
+        response = source_setup(request)
+        residue_list = request.session['residue_list']
+
+        self.assertIn(('317', 'B'), residue_list)
+        self.assertIn(('1', 'C'), residue_list)
+        
+        self.assertNotIn(('130', 'A'), residue_list)
+        self.assertNotIn(('5', 'C'), residue_list)
+
     def test_source_redirects_to_results(self):
         request = HttpRequest()
         request.method = 'POST'
@@ -158,7 +180,7 @@ class ProteinSourceSetupTest(TestCase):
         request.session['hetatms'] = [('PHQ', 'C', '1'), ('CF0', 'C', '5')]
         request.session['residue_list'] = [('125', 'A'), ('126', 'A')]
         
-        _dict = {'residues' : '1'}
+        _dict = {'residues' : '0'}
         _qdict = QueryDict('', mutable=True)
         _qdict.update(_dict)
         request.POST = _qdict
@@ -178,7 +200,7 @@ class ProteinSourceSetupTest(TestCase):
         request.session['hetatms'] = [('PHQ', 'C', '1'), ('CF0', 'C', '5')]
         request.session['residue_list'] = [('125', 'A'), ('126', 'A')]
         
-        _dict = {'residues' : '1'}
+        _dict = {'residues' : '0'}
         _qdict = QueryDict('', mutable=True)
         _qdict.update(_dict)
         request.POST = _qdict
@@ -187,3 +209,21 @@ class ProteinSourceSetupTest(TestCase):
 
         self.assertEqual(request.session.get('source_residues')[0], ('125', 'A'))
 
+class ProteinResultsTest(TestCase):
+    
+    def setUp(self):
+        self.engine = import_module(settings.SESSION_ENGINE)
+
+    def test_results_page_returns_correct_html(self):
+        
+        request = HttpRequest()
+        request.method = 'GET'
+        request.session = self.engine.SessionStore(None)
+        request.session['pdb_id'] = '2HBQ'
+        request.session['chains'] = ['A', 'B', 'C']
+        request.session['hetatms'] = [('PHQ', 'C', '1'), ('CF0', 'C', '5')]
+        request.session['residue_list'] = [('125', 'A'), ('126', 'A')]
+
+        response = results(request)
+        
+        self.assertTemplateUsed(response, 'results.html')

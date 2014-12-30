@@ -14,7 +14,7 @@ Select the residues you would like to use as the source in the analysis
     {% for residue in residues %}
     <tr>
     <td>{{ residue.0 }}</td><td>{{ residue.1 }}</td>
-    <td><input type="checkbox" id="residue_checkbox_{{forloop.counter}}" name="hetatms" value="{{forloop.counter}}"></td>
+    <td><input type="checkbox" id="residue_checkbox_{{forloop.counter}}" name="hetatms" value="{{forloop.counter | add:"-1" }}"></td>
     </tr>
     {% endfor %}
   </table>

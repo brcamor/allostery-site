@@ -181,9 +181,17 @@ class NewVisitorTest(LiveServerTestCase):
         pdb_url = self.browser.current_url
         self.assertRegexpMatches(pdb_url, '/results')
 
+        # The page soon refreshes and he is shown a list of the top bonds in
+        # the protein by perturbation propensity and top bonds by quantile
+        # score
 
-        # He notices the button saying "Download results" and clicks this - a
-        # selection of files are downloaded to his computer.
+        pp_table = self.find_element_by_id('id_pp_table')
+        
+        pp_headers = pp_table.find_elements_by_tag_name('th')
+        pp_headers_text = [header.text for header in pp_headers]
+        self.assertEqual()
+
+        pp_rows = pp_table.find_elements_by_tag_name('td')
         
 
         # Satisfied, he decides that the developer of the site should be

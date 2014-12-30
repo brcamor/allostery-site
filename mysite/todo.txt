@@ -1,7 +1,16 @@
-Change URL from /the-only-protein-in-the-world to be /PDB_ID
+Chains/ligands not selected should be removed
 
-Implement selection of chains in setup page
+Make results page
 
-New view for selection of source residues
+Improve source residue selection page - drop downs and 'add' button? (AJAX to avoid page refresh)
 
-HETATM not the same as chain - need a HETATM selection page
+Work on styling: background image
+
+Embed jmol in source residues page to highlight selected residues 
+
+Embed jmol in results page to show results
+
+Work out how to download results files
+
+Refactor tests (unit and functional) to be more DRY
+Comment

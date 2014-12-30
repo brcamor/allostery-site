@@ -46,7 +46,7 @@ def hetatm_setup(request):
         included_hetatms_idx = request.POST.getlist('hetatms')
         included_hetatms = []
         for idx in included_hetatms_idx:
-            included_hetatms.append(hetatms[int(idx)-1])
+            included_hetatms.append(hetatms[int(idx)])
         removed_hetatms = [hetatm for hetatm in hetatms
                            if hetatm not in included_hetatms]
 
@@ -80,7 +80,7 @@ def source_setup(request):
         source_residues_idx = request.POST.getlist('residues')
         source_residues = []
         for idx in source_residues_idx:
-            source_residues.append(residues[int(idx)-1])
+            source_residues.append(residues[int(idx)])
         request.session['source_residues'] = source_residues
 
         return redirect('/results')
@@ -106,3 +106,6 @@ def source_setup(request):
                 'residues': residue_list,
             }
         )
+
+def results(request):
+    pass
