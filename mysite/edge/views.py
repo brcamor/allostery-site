@@ -4,6 +4,7 @@ import proteinnetwork as pn
 import requests 
 from django.conf import settings
 from utils.pdb_interact import get_chains, get_hetatms
+from proteinnetwork.molecules import AtomList, BondList
 
 def home_page(request):
 
@@ -179,13 +180,14 @@ def results(request):
                                                   source_bonds,
                                                   protein.bonds)
 
-        weak_bonds = [bond for bond in protein.bonds if bond.weight < 2000]
+        weak_bonds = BondList([bond for bond in protein.bonds if bond.weight < 2000])
         pp_weak = {bond.id:pp[bond.id] for bond in weak_bonds}
         pp_weak_ordered_idx = sorted(pp_weak.keys(), 
                                      key=lambda element:pp_weak[element], 
                                      reverse=True)
+        
+        # Get info on top bonds
         top_weak_bonds_pp = []
-
         for i in range(10):
             top_bond = protein.bonds[pp_weak_ordered_idx[i]]
             atom1_string = (top_bond.atom1.res_name + ' ' + 
@@ -197,9 +199,10 @@ def results(request):
             bond_pp = pp_weak[pp_weak_ordered_idx[i]]
             top_weak_bonds_pp.append([atom1_string, atom2_string, bond_pp])
 
-            pp_residues = pn.edgeedge.residue_pp(protein.residues.keys(), 
-                                                weak_bonds, 
-                                                pp_weak) 
+        # Get info on top residues
+        pp_residues = pn.edgeedge.residue_pp(protein.residues.keys(), 
+                                             weak_bonds, 
+                                             pp_weak) 
         pp_residues_sorted = sorted(pp_residues.keys(), 
                                     key=lambda element:pp_residues[element],
                                     reverse=True)
@@ -208,6 +211,18 @@ def results(request):
             top_residues_pp.append([pp_residues_sorted[i], 
                                     pp_residues[pp_residues_sorted[i]]])
 
+        # Calculate distances of bonds and residues from the source residues
+        distance_weak = pn.helpers.distance_between(source_bonds, 
+                                                    weak_bonds).min(axis=0)
+
+        import matplotlib
+        matplotlib.use('Agg') # Must be before importing matplotlib.pyplot or pylab!
+        import matplotlib.pyplot as plt
+        
+        plt.scatter(distance_weak, pp_weak.values())
+        plot_filename = pdb_id + '_bond_pp.svg'
+        plt.savefig(settings.BASE_DIR + '/edge/static/edge/' + plot_filename, format='svg')
+
         return render(request,
                       'results.html',
                       {
@@ -215,6 +230,7 @@ def results(request):
                           'source_residues' : source_residues,
                           'top_weak_bonds_pp': top_weak_bonds_pp,
                           'top_residues_pp' : top_residues_pp, 
+                          'distance_bond_pp_plot_file' : plot_filename,
                       }
         )
 

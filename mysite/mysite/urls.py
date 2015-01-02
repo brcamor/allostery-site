@@ -14,5 +14,5 @@ urlpatterns = patterns('',
     url(r'^hetatms', 'edge.views.hetatm_setup', name='hetatm_setup'),
     url(r'^source', 'edge.views.source_setup', name='source_setup'),
     url(r'^results', 'edge.views.results', name='results'),
-
+    
 )

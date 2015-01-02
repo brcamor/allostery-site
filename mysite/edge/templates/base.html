@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{% load static %}
+{% load staticfiles %}
 <html>
   
   <head> 
@@ -32,6 +32,11 @@
 	  {% endblock %}
 	</div>
 	
+	<div class = "row">
+	  {% block bond_pp_figure %}
+	  {% endblock %}
+	</div>
+
 	<div class="row">
 	  {% block results %}
 	  {% endblock %}

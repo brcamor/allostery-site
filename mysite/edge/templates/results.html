@@ -6,6 +6,10 @@
 The results of your analysis are given below 
 {% endblock %}
 
+{% block bond_pp_figure %}
+<img src="{{STATIC_URL}}edge/{{ distance_bond_pp_plot_file }}" width="100">
+{% endblock %}
+
 {% block results %}
 <p>Source residues are: <p> 
 {% for residue in source_residues %} 
@@ -33,7 +37,7 @@ The results of your analysis are given below
 </table>  
 
 <table class="table table-striped table-hover" id="id_residue_pp_table">
-  <caption>Top 10 bonds by perturbation propensity</caption>
+  <caption>Top 10 residues by perturbation propensity</caption>
   <thead>
   <tr>
     <th>Residue</th>
