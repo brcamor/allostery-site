@@ -180,22 +180,31 @@ class NewVisitorTest(TestCase):
         self.assertRegexpMatches(pdb_url, '/results')
 
         # The page soon loads and he is shown a list of the top bonds in
-        # the protein by perturbation propensity and top bonds by quantile
-        # score
+        # the protein by perturbation propensity and top residues by 
+        # perturbation propensity
 
-        pp_table = self.browser.find_element_by_id('id_pp_table')
+        bond_pp_table = self.browser.find_element_by_id('id_bond_pp_table')
         
-        pp_headers = pp_table.find_elements_by_tag_name('th')
-        pp_headers_text = [header.text for header in pp_headers]
-        self.assertEqual('Atom 1', pp_headers_text[0])
-        self.assertEqual('Atom 2', pp_headers_text[1])
-        self.assertEqual('Perturbation Propensity', pp_headers_text[2])
+        bond_pp_headers = bond_pp_table.find_elements_by_tag_name('th')
+        bond_pp_headers_text = [header.text for header in bond_pp_headers]
+        self.assertEqual('Atom 1', bond_pp_headers_text[0])
+        self.assertEqual('Atom 2', bond_pp_headers_text[1])
+        self.assertEqual('Perturbation Propensity', bond_pp_headers_text[2])
+        bond_pp_rows = bond_pp_table.find_elements_by_tag_name('td')
+        bond_pp_rows_text = [row.text for row in bond_pp_rows]
+        self.assertEqual('VAL 133 H', bond_pp_rows_text[0])
+        self.assertEqual('GLU 130 O', bond_pp_rows_text[1])
 
-
-        pp_rows = pp_table.find_elements_by_tag_name('td')
-        pp_rows_text = [row.text for row in pp_rows]
-        self.assertEqual('VAL 133 H', pp_rows_text[0])
-        self.assertEqual('GLU 130 O', pp_rows_text[1])
+        residue_pp_table = self.browser.find_element_by_id('id_residue_pp_table')
+        
+        residue_pp_headers = residue_pp_table.find_elements_by_tag_name('th')
+        residue_pp_headers_text = [header.text for header in residue_pp_headers]
+        self.assertEqual('Residue', residue_pp_headers_text[0])
+        self.assertEqual('Perturbation Propensity', residue_pp_headers_text[1])
+        residue_pp_rows = residue_pp_table.find_elements_by_tag_name('td')
+        residue_pp_rows_text = [row.text for row in residue_pp_rows]
+        self.assertEqual('130 A', residue_pp_rows_text[0])
+        self.assertEqual('133 A', residue_pp_rows_text[2])
 
         # He also notices an image showing the perturbation
         # propensity of bonds plotted against their distance from 

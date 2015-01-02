@@ -168,7 +168,6 @@ def results(request):
 
         # Calculate perturbation propensities
         source_residues_list = request.session['source_residues']
-        print "Source residue list: " + str(source_residues_list)
         source_residues = []
         for residue in source_residues_list:
             source_residues.append(tuple(residue))
@@ -186,6 +185,7 @@ def results(request):
                                      key=lambda element:pp_weak[element], 
                                      reverse=True)
         top_weak_bonds_pp = []
+
         for i in range(10):
             top_bond = protein.bonds[pp_weak_ordered_idx[i]]
             atom1_string = (top_bond.atom1.res_name + ' ' + 
@@ -194,10 +194,19 @@ def results(request):
             atom2_string = (top_bond.atom2.res_name + ' ' + 
                             top_bond.atom2.res_num + ' ' + 
                             top_bond.atom2.name)
-
             bond_pp = pp_weak[pp_weak_ordered_idx[i]]
-            top_bond_atoms_string = [atom1_string, atom2_string, bond_pp]
-            top_weak_bonds_pp.append(top_bond_atoms_string)
+            top_weak_bonds_pp.append([atom1_string, atom2_string, bond_pp])
+
+            pp_residues = pn.edgeedge.residue_pp(protein.residues.keys(), 
+                                                weak_bonds, 
+                                                pp_weak) 
+        pp_residues_sorted = sorted(pp_residues.keys(), 
+                                    key=lambda element:pp_residues[element],
+                                    reverse=True)
+        top_residues_pp = []
+        for i in range(10):
+            top_residues_pp.append([pp_residues_sorted[i], 
+                                    pp_residues[pp_residues_sorted[i]]])
 
         return render(request,
                       'results.html',
@@ -205,6 +214,7 @@ def results(request):
                           'pdb_id' : pdb_id,
                           'source_residues' : source_residues,
                           'top_weak_bonds_pp': top_weak_bonds_pp,
+                          'top_residues_pp' : top_residues_pp, 
                       }
         )
 
