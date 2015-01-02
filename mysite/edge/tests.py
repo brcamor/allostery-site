@@ -64,13 +64,15 @@ class ProteinChainSetupTest(TestCase):
         request.method = 'POST'
         request.session = self.engine.SessionStore(None)
         request.session['pdb_id'] = '1SC1'
-        _dict = {'chains' : ['A', 'B']}
+        request.session['all_chains'] = ['A', 'B']
+        _dict = {'chains' : 'A'}
         _qdict = QueryDict('', mutable=True)
         _qdict.update(_dict)
         request.POST = _qdict
 
         response = chain_setup(request)
-        self.assertEqual(request.session.get('chains')[0], ['A', 'B'])
+        self.assertEqual(request.session.get('included_chains'), ['A'])
+        self.assertEqual(request.session.get('removed_chains'), ['B'])
 
 class ProteinHetatmSetupTest(TestCase):
 
@@ -116,7 +118,7 @@ class ProteinHetatmSetupTest(TestCase):
 
         response = hetatm_setup(request)
 
-        self.assertIn(('PHQ', 'C', '1'), request.session.get('included_hetatms'))
+        self.assertIn(['1', 'C'], request.session.get('included_hetatms'))
 
     def test_hetatm_setup_POST_redirects_to_source_setup(self):
         request = HttpRequest()
@@ -147,7 +149,8 @@ class ProteinSourceSetupTest(TestCase):
         request.method = 'GET'
         request.session = self.engine.SessionStore(None)
         request.session['pdb_id'] = '2HBQ'
-        request.session['chains'] = ['A', 'B', 'C']
+        request.session['included_chains'] = ['A', 'B', 'C']
+        request.session['removed_chains'] = []
 
         response = source_setup(request)
         
@@ -158,9 +161,10 @@ class ProteinSourceSetupTest(TestCase):
         request.method = 'GET'
         request.session = self.engine.SessionStore(None)
         request.session['pdb_id'] = '2HBQ'
-        request.session['chains'] = ['B', 'C']
-        request.session['included_hetatms'] = [('PHQ', 'C', '1'), ]
-        request.session['removed_hetatms'] = [('CF0', 'C', '5')]
+        request.session['included_chains'] = ['B', 'C']
+        request.session['removed_chains'] = ['A']
+        request.session['included_hetatms'] = [['1', 'C']]
+        request.session['removed_hetatms'] = [['5', 'C']]
 
         response = source_setup(request)
         residue_list = request.session['residue_list']
@@ -176,7 +180,8 @@ class ProteinSourceSetupTest(TestCase):
         request.method = 'POST'
         request.session = self.engine.SessionStore(None)
         request.session['pdb_id'] = '1SC1'
-        request.session['chains'] = ['A', 'B']
+        request.session['included_chains'] = ['A', 'B']
+        request.session['removed_chains'] = ['A']
         request.session['hetatms'] = [('PHQ', 'C', '1'), ('CF0', 'C', '5')]
         request.session['residue_list'] = [('125', 'A'), ('126', 'A')]
         
@@ -214,7 +219,11 @@ class ProteinResultsTest(TestCase):
     def setUp(self):
         self.engine = import_module(settings.SESSION_ENGINE)
 
-    def test_results_page_returns_correct_html(self):
+    def test_results_url_resolves_to_results_view(self):
+        found = resolve('/results')
+        self.assertEqual(found.func, results)        
+
+    def test_results_page_returns_correct_template(self):
         
         request = HttpRequest()
         request.method = 'GET'
@@ -223,6 +232,7 @@ class ProteinResultsTest(TestCase):
         request.session['chains'] = ['A', 'B', 'C']
         request.session['hetatms'] = [('PHQ', 'C', '1'), ('CF0', 'C', '5')]
         request.session['residue_list'] = [('125', 'A'), ('126', 'A')]
+        request.session['source_residues'] = [('125', 'A')]
 
         response = results(request)
         

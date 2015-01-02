@@ -10,15 +10,27 @@ Select the chains you would like to include in the analysis
 
 <form role="form" method="POST" action="">
   <table class="table" id="id_chain_table">
-    <tr><th>Molecule name</th><th>Chain</th><th>Selected</th></tr>
-      {% for item in chain_map %}
-        <tr><td>{{ forloop.counter }}: {{ item.0 }}</td><td>{{ item.1 }}</td>
-            <td><input type="checkbox" id="chain_checkbox_{{forloop.counter}}" name="chains" value="{{item.1}}"></td></tr>
+    <thead>
+      <tr>
+	<th>Molecule name</th>
+	<th>Chain</th>
+	<th>Selected</th></tr>
+    </thead>
+  
+    <tbody>
+      {% for item in chain_map %}  
+      <tr>
+	<td>{{ forloop.counter }}: {{ item.0 }}</td>
+	<td>{{ item.1 }}</td>
+        <td><input type="checkbox" id="chain_checkbox_{{forloop.counter}}" name="chains" value="{{item.1}}"></td>
+      </tr>
       {% endfor %}
+    </tbody>
   </table>
   
   {% csrf_token %}
   <input type="submit" class="btn btn-large btn-primary" id="continue_button" value="Continue">
+  
 </form>
   
 {% endblock %}

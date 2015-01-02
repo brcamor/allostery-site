@@ -1,10 +1,20 @@
-Chains/ligands not selected should be removed
+Extra page between selecting source residues and running analysis?
+      - summarise included chains/hetatms and chosen source residues
+      - allow to choose some option for the analysis e.g. quantile scores/transients/edge-edge
 
-Make results page
+Django seems to save tuples as lists - is there a more elegant way of dealing with this than 
+just converting back?
+
+Calculate quantile regression scores
+
+Biological unit!
+
+Better way to check if chains/hetatms/source already visited
+
+Refactor setup info into setup_params class?
 
 Improve source residue selection page - drop downs and 'add' button? (AJAX to avoid page refresh)
-
-Work on styling: background image
+Add residue name
 
 Embed jmol in source residues page to highlight selected residues 
 

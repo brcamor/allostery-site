@@ -2,16 +2,16 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import unittest
 import sys
-from django.test import LiveServerTestCase
+from django.test import TestCase
 import proteinnetwork as pn
 
-class NewVisitorTest(LiveServerTestCase):
+class NewVisitorTest(TestCase):
     
     def setUp(self):
         self.browser = webdriver.Firefox()
-        self.browser.implicitly_wait(3)
-        
-        
+        self.browser.implicitly_wait(3)        
+        self.server_url = "http://155.198.224.245:8000"
+
     def tearDown(self):
         self.browser.quit()
 
@@ -19,7 +19,7 @@ class NewVisitorTest(LiveServerTestCase):
 
         # Ben decides to check out the homepage of a new protein
         # analysis webserver
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.server_url)
 
         # He notices the page title and header mention allosteric 
         # site prediction
@@ -165,9 +165,7 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertEqual('5', row_text[-3])
 
         # He selects the first few residues as his source (125-128 in chain A)
-        # and clicks "Continue".  He is taken to a new url "results" where is
-        # told that the results are being processed and that the page will
-        # refresh when the computations have finished
+        # and clicks "Continue".  He is taken to a new url "results"
 
         self.browser.find_element_by_id('residue_checkbox_1').click()
         self.browser.find_element_by_id('residue_checkbox_2').click()
@@ -181,19 +179,27 @@ class NewVisitorTest(LiveServerTestCase):
         pdb_url = self.browser.current_url
         self.assertRegexpMatches(pdb_url, '/results')
 
-        # The page soon refreshes and he is shown a list of the top bonds in
+        # The page soon loads and he is shown a list of the top bonds in
         # the protein by perturbation propensity and top bonds by quantile
         # score
 
-        pp_table = self.find_element_by_id('id_pp_table')
+        pp_table = self.browser.find_element_by_id('id_pp_table')
         
         pp_headers = pp_table.find_elements_by_tag_name('th')
         pp_headers_text = [header.text for header in pp_headers]
-        self.assertEqual()
+        self.assertEqual('Atom 1', pp_headers_text[0])
+        self.assertEqual('Atom 2', pp_headers_text[1])
+        self.assertEqual('Perturbation Propensity', pp_headers_text[2])
+
 
         pp_rows = pp_table.find_elements_by_tag_name('td')
-        
+        pp_rows_text = [row.text for row in pp_rows]
+        self.assertEqual('VAL 133 H', pp_rows_text[0])
+        self.assertEqual('GLU 130 O', pp_rows_text[1])
 
-        # Satisfied, he decides that the developer of the site should be
-        # nominated for a Nobel Prize
+        # He also notices an image showing the perturbation
+        # propensity of bonds plotted against their distance from 
+        # the source residues
+
+        
 

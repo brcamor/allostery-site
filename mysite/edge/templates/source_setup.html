@@ -9,17 +9,33 @@ Select the residues you would like to use as the source in the analysis
 {% block table %}
 
 <form role="form" method="POST" action="">
+
   <table class="table" id="id_source_table">
-    <th>Residue number</th><th>Chain</th><th>Selected</th>
-    {% for residue in residues %}
-    <tr>
-    <td>{{ residue.0 }}</td><td>{{ residue.1 }}</td>
-    <td><input type="checkbox" id="residue_checkbox_{{forloop.counter}}" name="hetatms" value="{{forloop.counter | add:"-1" }}"></td>
-    </tr>
+    <thead>
+      <tr>
+	<th>Residue number</th>
+	<th>Chain</th>
+	<th>Selected</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for residue in residues %}
+      <tr>
+	<td>{{ residue.0 }}</td>
+	<td>{{ residue.1 }}</td>
+	<td><input type="checkbox" 
+		   id="residue_checkbox_{{forloop.counter}}" 
+		   name="residues" 
+		   value="{{forloop.counter | add:"-1" }}"></td>
+      </tr>
     {% endfor %}
+    </tbody>
   </table>
+
   {% csrf_token %}
   <input type="submit" class="btn btn-large btn-primary" id="continue_button" value="Continue">
+
 </form>
   
 {% endblock %}
