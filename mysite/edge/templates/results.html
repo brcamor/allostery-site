@@ -12,39 +12,16 @@
 
 <script type=text/javascript>
 
-  var margin = {top:20, right:20, bottom:20, left:20}
+  var margin = {top:20, right:20, bottom:20, left:40}
   var width = 600 - margin.right;
-  var h = 400 - margin.top - margin.bottom;
-  var dataset;
-
-  var xScale = d3.scale.linear()
-                       .domain([0, d3.max(dataset, function(d) {return d[0];})])
-                       .range([0, width]);
-  var yScale = d3.scale.linear()
-                       .domain([0, d3.max(dataset, function(d) { return d[1]; })])
-                       .range([height, 0]);
-
-  var xAxis = d3.svg.axis()
-                    .scale(xScale)
-                    .orient("bottom")
-
-  var yAxis = d3.svg.axis()
-                    .scale(yScale)
-                    .orient("left")
+  var height = 400 - margin.top - margin.bottom
 
   var svg = d3.select("#id_bond_pp_graph")
               .append("svg")
               .attr("height", height + margin.top + margin.bottom)
-              .attr("width", width + margin.left + margin.right);
-
-  svg.append("g")
-     .attr("class", "axis")
-     .attr("transform", "translate(0," + height + ")")
-     .call(xAxis);
-
-  svg.append("g")
-     .attr("class", "axis")
-     .call(yAxis);
+              .attr("width", width + margin.left + margin.right)
+              .append("g")
+              .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   svg.append("text") 
      .attr("class", "x label")
@@ -61,19 +38,44 @@
      .attr("transform", "rotate(-90)")
      .attr("Perturbation Propensity")
 
-  d3.csv("static/edge/2HBQ_bond_pp.csv", function(error, data) {
+  d3.csv("static/edge/{{distance_bond_pp_file}}", function(error, data) {
   if (error) {
      console.log(error);
   } else {
      console.log(data);
 
-     dataset = data.map(function(d) {return [+d['distance'], +d['pp']];});
+     var dataset = data.map(function(d) {return [+d['distance'], +d['pp']];});
      makeScatterPlot(dataset);
          }
   });
     
   function makeScatterPlot(dataset) {
  
+  var xScale = d3.scale.linear()
+                       .domain([0, d3.max(dataset, function(d) {return d[0];})])
+                       .range([0, width]);
+  
+  var yScale = d3.scale.linear()
+                       .domain([0, d3.max(dataset, function(d) { return d[1]; })])
+                       .range([height, 0]);
+
+  var xAxis = d3.svg.axis()
+                    .scale(xScale)
+                    .orient("bottom")
+
+  var yAxis = d3.svg.axis()
+                    .scale(yScale)
+                    .orient("left")
+
+  svg.append("g")
+     .attr("class", "axis")
+     .attr("transform", "translate(0," + height + ")")
+     .call(xAxis);
+
+  svg.append("g")
+     .attr("class", "axis")
+     .call(yAxis);
+
   var circles = svg.append("g")
                    .attr("id", "circles")
                    .attr("clip-path", "url(#chart_area)")
