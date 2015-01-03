@@ -4,7 +4,7 @@ import unittest
 import sys
 from django.test import TestCase
 import proteinnetwork as pn
-from proteinnetwork.molecules import AtomList, BondList
+
 class NewVisitorTest(TestCase):
     
     def setUp(self):
