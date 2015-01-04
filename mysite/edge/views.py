@@ -221,8 +221,22 @@ def results(request):
                                            index = weak_bonds.id(), 
                                            columns = ['distance'])
         pp_frame = pd.DataFrame(pp.values(), index = pp.keys(), columns = ['pp'])
-        bond_data = bond_distance_frame.join(pp_frame,
-                                             on = bond_distance_frame.index)
+        bond_string_output = [weak_bond.atom1.res_name +
+                              weak_bond.atom1.res_num + ' ' + 
+                              weak_bond.atom1.chain + ' ' + 
+                              weak_bond.atom1.name + ' : ' + 
+                              weak_bond.atom2.res_name +
+                              weak_bond.atom2.res_num + ' ' + 
+                              weak_bond.atom2.chain + ' ' + 
+                              weak_bond.atom2.name for weak_bond in weak_bonds]
+
+        bond_string_frame = pd.DataFrame(bond_string_output, 
+                                         index = weak_bonds.id(), 
+                                         columns = ['atom_names'])
+        bond_data = bond_string_frame.join(bond_distance_frame,
+                                           on = bond_string_frame.index)
+        bond_data = bond_data.join(pp_frame, 
+                                   on = bond_data.index)
         bond_data = bond_data.sort(columns = 'distance')
         bond_data.to_csv(settings.BASE_DIR + '/edge/static/edge/' 
                          + distance_bond_pp_file)

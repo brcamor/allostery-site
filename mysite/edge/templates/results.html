@@ -44,7 +44,7 @@
   } else {
      console.log(data);
 
-     var dataset = data.map(function(d) {return [+d['distance'], +d['pp']];});
+     var dataset = data.map(function(d) {return [d['atom_names'], +d['distance'], +d['pp']];});
      makeScatterPlot(dataset);
          }
   });
@@ -52,11 +52,11 @@
   function makeScatterPlot(dataset) {
  
   var xScale = d3.scale.linear()
-                       .domain([0, d3.max(dataset, function(d) {return d[0];})])
+                       .domain([0, d3.max(dataset, function(d) {return d[1];})])
                        .range([0, width]);
   
   var yScale = d3.scale.linear()
-                       .domain([0, d3.max(dataset, function(d) { return d[1]; })])
+                       .domain([0, d3.max(dataset, function(d) { return d[2]; })])
                        .range([height, 0]);
 
   var xAxis = d3.svg.axis()
@@ -82,16 +82,29 @@
                    .selectAll("circle")
                    .data(dataset)
                    .enter()
-                   .append("circle");
+                   .append("circle")
+                   .on("mouseover", function(d) { 
+                     d3.select(this)
+                       .attr("fill", "red");
+                   })
+                   .on("mouseout", function(d) {
+                     d3.select(this)
+                       .attr("fill", "blue");
+                   });
+                   
+                    
 
   circles.attr("cx", function(d) {
-              return xScale(d[0]);
+              return xScale(d[1]);
           })
          .attr("cy", function(d) {
-              return yScale(d[1]);
+              return yScale(d[2]);
           })
-         .attr("r", 3)
+         .attr("r", 7)
          .attr("fill", "blue");
+
+  circles.append("title")
+      .text(function(d) {return d[0]; });
 
 }
 
@@ -99,7 +112,7 @@
 
 <p>Source residues are: <p> 
 {% for residue in source_residues %} 
-{{residue.0}} {{residue.1}}<br>
+{{residue.0}} {{residue.1}}, 
 {% endfor %}
 
 <table class="table table-striped table-hover" id="id_bond_pp_table">
