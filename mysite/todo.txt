@@ -2,15 +2,16 @@ Extra page between selecting source residues and running analysis?
       - summarise included chains/hetatms and chosen source residues
       - allow to choose some option for the analysis e.g. quantile scores/transients/edge-edge
 
-Django seems to save tuples as lists - is there a more elegant way of dealing with this than 
-just converting back?
+Show residue graph:
+     - calculate residue distance
+     - make csv file with data in
 
-Plotting on server-side (matplotlib) or client-side (d3)?:
-Server side:		
-       - get d3
-       - stick d3 in results page
-       - plot basic data to get the hang of it 
-       - plot from csv file output by results view
+Graceful failure:
+	 - "try"
+
+Deal with not finding HETATM in the database by removing that atom
+
+Class for "run": data and methods for analysing that data
 
 Calculate quantile regression scores
 
