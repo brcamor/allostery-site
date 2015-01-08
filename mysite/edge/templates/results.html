@@ -50,7 +50,7 @@ Source residues are:
   } else {
      console.log(data);
 
-     var dataset = data.map(function(d) {return [d['atom_names'], +d['distance'], +d['pp']];});
+     var dataset = data.map(function(d) {return [d['bond_name'], +d['distance'], +d['pp']];});
      makeScatterPlot(dataset);
          }
   });
@@ -120,8 +120,7 @@ Source residues are:
   <caption>Top 10 bonds by perturbation propensity</caption>
   <thead>
   <tr>
-    <th>Atom 1</th>
-    <th>Atom 2</th>
+    <th>Bond</th>
     <th>Perturbation Propensity</th>
   </tr>
   </thead>
@@ -130,7 +129,6 @@ Source residues are:
     <tr> 
       <td>{{item.0}}</td>
       <td>{{item.1}}</td> 
-      <td>{{item.2}}</td>
     </tr>
     {% endfor %}
   </tbody>
@@ -147,7 +145,7 @@ Source residues are:
   <tbody>
     {% for item in top_residues_pp %}
     <tr> 
-      <td>{{item.0.0}} {{item.0.1}}</td>
+      <td>{{item.0}}</td>
       <td>{{item.1}}</td> 
     </tr>
     {% endfor %}

@@ -173,73 +173,21 @@ def results(request):
         source_residues = []
         for residue in source_residues_list:
             source_residues.append(tuple(residue))
+
+        results = pn.edgeedge.edgeedge_run(protein, source_residues)
+        results.calculate_bond_perturbation_propensities()
+        results.bond_results.sort(columns=["pp"], ascending=[0], inplace=True)
+        top_weak_bonds_pp = zip(results.bond_results[0:10]['bond_name'],
+                                results.bond_results[0:10]['pp'])
+
+        results.calculate_residue_perturbation_propensities()
+        results.residue_results.sort(columns=['pp'], ascending=[0], inplace=True)
+        top_residues_pp = zip(results.residue_results[0:10]['residue_name'],
+                              results.residue_results[0:10]['pp'])
         
-        source_atoms = protein.get_atoms(source_residues)
-        source_bonds = pn.helpers.weak_bonds(source_atoms, protein.bonds)
-
-        pp = pn.edgeedge.perturbation_propensity (protein.network, 
-                                                  source_bonds,
-                                                  protein.bonds)
-
-        weak_bonds = BondList([bond for bond in protein.bonds if bond.weight < 2000])
-        pp_weak = {bond.id:pp[bond.id] for bond in weak_bonds}
-        pp_weak_ordered_idx = sorted(pp_weak.keys(), 
-                                     key=lambda element:pp_weak[element], 
-                                     reverse=True)
-        
-        # Get info on top bonds
-        top_weak_bonds_pp = []
-        for i in range(10):
-            top_bond = protein.bonds[pp_weak_ordered_idx[i]]
-            atom1_string = (top_bond.atom1.res_name + ' ' + 
-                            top_bond.atom1.res_num + ' ' + 
-                            top_bond.atom1.name)
-            atom2_string = (top_bond.atom2.res_name + ' ' + 
-                            top_bond.atom2.res_num + ' ' + 
-                            top_bond.atom2.name)
-            bond_pp = pp_weak[pp_weak_ordered_idx[i]]
-            top_weak_bonds_pp.append([atom1_string, atom2_string, bond_pp])
-
-        # Get info on top residues
-        pp_residues = pn.edgeedge.residue_pp(protein.residues.keys(), 
-                                             weak_bonds, 
-                                             pp_weak) 
-        pp_residues_sorted = sorted(pp_residues.keys(), 
-                                    key=lambda element:pp_residues[element],
-                                    reverse=True)
-        top_residues_pp = []
-        for i in range(10):
-            top_residues_pp.append([pp_residues_sorted[i], 
-                                    pp_residues[pp_residues_sorted[i]]])
-
-        # Calculate distances of bonds and residues from the source residues
-        distance_weak = pn.helpers.distance_between(source_bonds, 
-                                                    weak_bonds).min(axis=0)
-
-        distance_bond_pp_file = pdb_id + "_bond_pp.csv"
-        bond_distance_frame = pd.DataFrame(distance_weak, 
-                                           index = weak_bonds.id(), 
-                                           columns = ['distance'])
-        pp_frame = pd.DataFrame(pp.values(), index = pp.keys(), columns = ['pp'])
-        bond_string_output = [weak_bond.atom1.res_name +
-                              weak_bond.atom1.res_num + ' ' + 
-                              weak_bond.atom1.chain + ' ' + 
-                              weak_bond.atom1.name + ' : ' + 
-                              weak_bond.atom2.res_name +
-                              weak_bond.atom2.res_num + ' ' + 
-                              weak_bond.atom2.chain + ' ' + 
-                              weak_bond.atom2.name for weak_bond in weak_bonds]
-
-        bond_string_frame = pd.DataFrame(bond_string_output, 
-                                         index = weak_bonds.id(), 
-                                         columns = ['atom_names'])
-        bond_data = bond_string_frame.join(bond_distance_frame,
-                                           on = bond_string_frame.index)
-        bond_data = bond_data.join(pp_frame, 
-                                   on = bond_data.index)
-        bond_data = bond_data.sort(columns = 'distance')
-        bond_data.to_csv(settings.BASE_DIR + '/edge/static/edge/' 
-                         + distance_bond_pp_file)
+        bond_results_file = pdb_id + "_bond_results.csv"
+        results.bond_results_to_csv(name=settings.BASE_DIR + '/edge/static/edge/' + 
+                                    bond_results_file)
 
         return render(request,
                       'results.html',
@@ -248,7 +196,7 @@ def results(request):
                           'source_residues' : source_residues,
                           'top_weak_bonds_pp': top_weak_bonds_pp,
                           'top_residues_pp' : top_residues_pp, 
-                          'distance_bond_pp_file' : distance_bond_pp_file,
+                          'distance_bond_pp_file' : bond_results_file,
                       }
         )
 
