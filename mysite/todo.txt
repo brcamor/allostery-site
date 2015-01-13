@@ -1,32 +1,24 @@
+Biological unit!
+Quantile scores
+Improve source residue selection page - drop downs and 'add' button? (AJAX to avoid page refresh)
+
+Work out how to highlight chains/residues in Jmol when selected
+Work out how to color residues by pp in Jmol
+
 Extra page between selecting source residues and running analysis?
       - summarise included chains/hetatms and chosen source residues
       - allow to choose some option for the analysis e.g. quantile scores/transients/edge-edge
 
-Show residue graph:
-     - calculate residue distance
-     - make csv file with data in
+Refactor d3.js graph scripts into single function
 
 Graceful failure:
 	 - "try"
 
 Deal with not finding HETATM in the database by removing that atom
 
-Class for "run": data and methods for analysing that data
-
-Calculate quantile regression scores
-
-Biological unit!
-
-Better way to check if chains/hetatms/source already visited
+Better way to check if chains/hetatms/source pages already visited
 
 Refactor setup info into setup_params class?
-
-Improve source residue selection page - drop downs and 'add' button? (AJAX to avoid page refresh)
-Add residue name
-
-Embed jmol in source residues page to highlight selected residues 
-
-Embed jmol in results page to show results
 
 Work out how to download results files
 

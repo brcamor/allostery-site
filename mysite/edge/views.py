@@ -168,12 +168,12 @@ def results(request):
         ngenerator.generate_network(protein, 
                                     bond_files_path=settings.MEDIA_ROOT)
 
-        # Calculate perturbation propensities
         source_residues_list = request.session['source_residues']
         source_residues = []
         for residue in source_residues_list:
             source_residues.append(tuple(residue))
 
+        # Calculate perturbation propensities
         results = pn.edgeedge.edgeedge_run(protein, source_residues)
         results.calculate_bond_perturbation_propensities()
         results.bond_results.sort(columns=["pp"], ascending=[0], inplace=True)
@@ -189,6 +189,9 @@ def results(request):
         results.bond_results_to_csv(name=settings.BASE_DIR + '/edge/static/edge/' + 
                                     bond_results_file)
 
+        residue_results_file = pdb_id + "_residue_results.csv"
+        results.residue_results_to_csv(name=settings.BASE_DIR + '/edge/static/edge/' + 
+                                    residue_results_file)
         return render(request,
                       'results.html',
                       {
@@ -197,6 +200,7 @@ def results(request):
                           'top_weak_bonds_pp': top_weak_bonds_pp,
                           'top_residues_pp' : top_residues_pp, 
                           'distance_bond_pp_file' : bond_results_file,
+                          'distance_residue_pp_file' : residue_results_file,
                       }
         )
 
