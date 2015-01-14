@@ -1,0 +1,19 @@
+.body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-family: sans-serif;
+    fton-size: 11px;
+}
+
+.label {
+    fill: #777;
+}
