@@ -2,8 +2,8 @@ Biological unit!
 Quantile scores
 Improve source residue selection page - drop downs and 'add' button? (AJAX to avoid page refresh)
 
-Work out how to highlight chains/residues in Jmol when selected
 Work out how to color residues by pp in Jmol
+Work out how to show residues in jmol when you click on residue in results graph
 
 Extra page between selecting source residues and running analysis?
       - summarise included chains/hetatms and chosen source residues
@@ -13,8 +13,7 @@ Refactor d3.js graph scripts into single function
 
 Graceful failure:
 	 - "try"
-
-Deal with not finding HETATM in the database by removing that atom
+	 - deal with not finding HETATM in the database by removing that atom
 
 Better way to check if chains/hetatms/source pages already visited
 

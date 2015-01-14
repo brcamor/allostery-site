@@ -79,8 +79,21 @@ def hetatm_setup(request):
     else:
 
         pdb_id = request.session.get('pdb_id')
+        pdb_file_name = settings.MEDIA_ROOT + '/' + pdb_id + '.pdb'
         chains = request.session.get('all_chains')
-        
+        removed_chains = request.session.get('removed_chains', [])
+
+        protein = pn.molecules.Protein()
+        parser = pn.parsing.PDBParser(pdb_file_name)
+        parser.parse(
+            protein, 
+            strip={
+                'res_name' : ['HOH'], 
+                'chain' : removed_chains
+            }
+        )
+        final_pdb_name = protein.pdb_id.split('/')[-1]
+
         if pdb_id and chains:
             pdb_file_name = settings.MEDIA_ROOT + '/' + pdb_id + '.pdb'
             hetatms = get_hetatms(pdb_file_name, chains)
@@ -89,7 +102,7 @@ def hetatm_setup(request):
             return render(
                 request, 
                 'hetatm_setup.html', 
-                {'pdb_id' : pdb_id, 'hetatms' : hetatms}
+                {'pdb_id' : pdb_id, 'hetatms' : hetatms, 'pdb_file' : final_pdb_name}
             )
         
         else:
@@ -127,6 +140,8 @@ def source_setup(request):
             }
         )
 
+        final_pdb_name = protein.pdb_id.split('/')[-1]
+
         residue_list = sorted(
             protein.residues.keys(), 
             key=lambda element: (element[1], int(element[0][0:3])))
@@ -138,6 +153,7 @@ def source_setup(request):
             {
                 'pdb_id' : request.session['pdb_id'],
                 'residues': residue_list,
+                'pdb_file' : final_pdb_name,
             }
         )
     else:
