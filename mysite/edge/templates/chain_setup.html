@@ -6,20 +6,34 @@
 Select the chains you would like to include in the analysis 
 {% endblock %}
 
-{% block table %}
+{% block protein_view  %}
 
 <div id="jmol_protein_view" align="center">
 <script type="text/javascript">
   var Info = {
-  width: 600,
-  height: 400,
+  width: 800,
+  height: 500,
     use: "WebGL HTML5",
   j2sPath: "static/jsmol/j2s",
   console: "jmolApplet0_infodiv"
   }
   jmolApplet0 = Jmol.getApplet("jmolApplet0", Info);
-  Jmol.script(jmolApplet0,"background white;load /static/edge/2HBQ.pdb;select all;cartoon only;color chain;")
+  Jmol.script(jmolApplet0,'background black;load {{ MEDIA_URL }}{{ pdb_id }}.pdb ;select all;cartoon only; color lightgrey; set hermiteLevel 8; select hetero and not solvent; wireframe on;wireframe 50;')
+
+function colorChainRed(chkbox, chainID){
+if (chkbox.checked) {
+  Jmol.script (jmolApplet0,'select :' + chainID + '; color red;');
+}
+else {
+ Jmol.script (jmolApplet0,'select :' + chainID + '; color lightgrey;');
+}
+}
+
 </script>
+
+{% endblock %}
+
+{% block table %}
 </div>
 
 <br>
@@ -38,7 +52,7 @@ Select the chains you would like to include in the analysis
       <tr>
 	<td>{{ forloop.counter }}: {{ item.0 }}</td>
 	<td>{{ item.1 }}</td>
-        <td><input type="checkbox" id="chain_checkbox_{{forloop.counter}}" name="chains" value="{{item.1}}"></td>
+        <td><input type="checkbox" id="chain_checkbox_{{forloop.counter}}" name="chains" value="{{item.1}}" onclick="colorChainRed(this, '{{ item.1 }}')"></td>
       </tr>
       {% endfor %}
     </tbody>

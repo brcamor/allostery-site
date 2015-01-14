@@ -2,3 +2,5 @@ virtualenv_mac/
 virtualenv/
 static/
 media/
+
+*.pdb

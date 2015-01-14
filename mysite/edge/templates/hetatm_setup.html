@@ -6,6 +6,33 @@
 Select the heteroatoms you would like to include in the analysis 
 {% endblock %}
 
+{% block protein_view  %}
+
+<div id="jmol_protein_view" align="center">
+<script type="text/javascript">
+  var Info = {
+  width: 800,
+  height: 500,
+    use: "WebGL HTML5",
+  j2sPath: "static/jsmol/j2s",
+  console: "jmolApplet0_infodiv"
+  }
+  jmolApplet0 = Jmol.getApplet("jmolApplet0", Info);
+  Jmol.script(jmolApplet0,'background black;load {{ MEDIA_URL }}{{ pdb_id }}.pdb ;select all;cartoon only; color lightgrey;set hermiteLevel 8; select hetero and not solvent; wireframe on;wireframe 50;')
+
+function colorHetatmRed(chkbox, chainID, resNum){
+if (chckbox.checked) {
+  Jmol.script (jmolApplet0,'select ' + resNum + ':' + chainID + '; color red;');
+  }
+else {
+ Jmol.script (jmolApplet0,'select ' + resNum + ':' + chainID + '; color lightgrey;');
+}
+}
+</script>
+
+{% endblock %}
+
+
 {% block table %}
 
 <form role="form" method="POST" action="">
@@ -25,7 +52,7 @@ Select the heteroatoms you would like to include in the analysis
 	<td>{{ forloop.counter }}: {{ item.0 }}</td>
 	<td>{{item.1}}</td>
 	<td>{{item.2}}</td>
-        <td><input type="checkbox" id="hetatm_checkbox_{{forloop.counter}}" name="hetatms" value="{{forloop.counter | add:"-1" }}"></td>
+        <td><input type="checkbox" id="hetatm_checkbox_{{forloop.counter}}" name="hetatms" value="{{forloop.counter | add:"-1" }}" onclick="colorHetatmRed(this, '{{item.1}}','{{item.2}}')"></td>
       </tr>
       {% endfor %}
     </tbody>

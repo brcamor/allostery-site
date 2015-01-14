@@ -1,4 +1,4 @@
-USER  MOD reduce.3.14.080821 H: found=0, std=0, add=2036, rem=0, adj=71
+USER  MOD reduce.3.14.080821 H: found=0, std=0, add=2013, rem=0, adj=72
 HEADER    HYDROLASE/HYDROLASE INHIBITOR           14-JUN-06   2HBQ
 TITLE     CRYSTAL STRUCTURE OF WILDTYPE HUMAN CASPASE-1 IN COMPLEX WITH 3-[2-(2-
 TITLE    2 BENZYLOXYCARBONYLAMINO-3-METHYL-BUTYRYLAMINO)-PROPIONYLAMINO]-4-OXO-
@@ -592,7 +592,7 @@ USER  MOD Single : A 213 THR OG1 :   rot   77:sc=   0.342
 USER  MOD Single : A 220 HIS     :     no HE2:sc=    1.09  K(o=1.1,f=-5.4!)
 USER  MOD Single : A 225 LYS NZ  :NH3+    180:sc=       0   (180deg=0)
 USER  MOD Single : A 227 SER OG  :   rot -123:sc=  0.0881
-USER  MOD Single : A 237 HIS    A:     no HD1:sc=    0.25  K(o=0.25,f=-3.5!)
+USER  MOD Single : A 237 HIS    A:     no HD1:sc=    0.25  K(o=0.25,f=-2.7!)
 USER  MOD Single : A 246 LYS NZ  :NH3+    180:sc=       0   (180deg=0)
 USER  MOD Single : A 247 LYS NZ  :NH3+   -174:sc=       0   (180deg=-0.0234)
 USER  MOD Single : A 249 SER OG  :   rot  180:sc=   0.237
@@ -609,7 +609,8 @@ USER  MOD Single : A 272 SER OG  :   rot  180:sc=       0
 USER  MOD Single : A 274 LYS NZ  :NH3+    159:sc=   0.904   (180deg=0.667)
 USER  MOD Single : A 276 LYS NZ  :NH3+   -176:sc=    1.28   (180deg=1.26)
 USER  MOD Single : A 278 LYS NZ  :NH3+   -147:sc=    1.09   (180deg=0.528)
-USER  MOD Single : A 283 GLN     :      amide:sc=    0.35  K(o=0.35,f=-2.3)
+USER  MOD Single : A 283 GLN     :      amide:sc=  -0.716  K(o=-0.72,f=-2.3)
+USER  MOD Single : A 285 CYS SG  :   rot  180:sc=   0.268
 USER  MOD Single : A 289 SER OG  :   rot  180:sc=       0
 USER  MOD Single : A 296 LYS NZ  :NH3+    180:sc=       0   (180deg=0)
 USER  MOD Single : B 319 LYS NZ  :NH3+    180:sc=       0   (180deg=0)
@@ -3073,6 +3074,7 @@ ATOM      0  H   CYS A 285      35.707  57.817   2.980  1.00 20.08           H  
 ATOM      0  HA  CYS A 285      37.573  57.280   5.032  1.00 19.77           H   new
 ATOM      0  HB2 CYS A 285      34.795  56.231   4.380  1.00 20.60           H   new
 ATOM      0  HB3 CYS A 285      35.711  55.668   5.785  1.00 20.60           H   new
+ATOM      0  HG  CYS A 285      33.858  57.604   6.653  1.00 22.96           H   new
 ATOM   1218  N   ARG A 286      38.160  54.761   4.791  1.00 18.19           N
 ATOM   1219  CA  ARG A 286      38.704  53.439   4.512  1.00 18.49           C
 ATOM   1220  C   ARG A 286      38.179  52.444   5.542  1.00 19.82           C
@@ -4674,60 +4676,5 @@ ATOM      0  HD1 HIS B 404      60.507  76.233 -13.381  1.00 32.85           H  
 ATOM      0  HD2 HIS B 404      60.655  77.921 -17.214  1.00 33.19           H   new
 ATOM      0  HE1 HIS B 404      61.846  78.382 -13.127  1.00 33.41           H   new
 TER    2036      HIS B 404
-HETATM 2037  C1  PHQ C   1      31.727  66.680   9.788  1.00 33.48           C
-HETATM 2038  O1  PHQ C   1      31.325  66.274  10.868  1.00 34.25           O
-HETATM 2039  O2  PHQ C   1      32.123  68.074   9.634  1.00 33.65           O
-HETATM 2040  C2  PHQ C   1      32.419  68.906  10.758  1.00 34.19           C
-HETATM 2041  C3  PHQ C   1      33.865  69.393  10.714  1.00 34.61           C
-HETATM 2042  C4  PHQ C   1      34.301  70.318  11.667  1.00 35.22           C
-HETATM 2043  C5  PHQ C   1      35.673  70.601  11.786  1.00 35.50           C
-HETATM 2044  C6  PHQ C   1      36.570  70.123  10.826  1.00 35.08           C
-HETATM 2045  C7  PHQ C   1      36.119  69.285   9.780  1.00 34.23           C
-HETATM 2046  C8  PHQ C   1      34.756  68.915   9.743  1.00 34.36           C
-HETATM    0  H81 PHQ C   1      34.392  68.248   8.948  1.00 34.36           H   new
-HETATM    0  H71 PHQ C   1      36.817  68.928   9.009  1.00 34.23           H   new
-HETATM    0  H61 PHQ C   1      37.633  70.400  10.885  1.00 35.08           H   new
-HETATM    0  H51 PHQ C   1      36.040  71.198  12.634  1.00 35.50           H   new
-HETATM    0  H41 PHQ C   1      33.574  70.822  12.321  1.00 35.22           H   new
-HETATM    0  H22 PHQ C   1      31.738  69.769  10.769  1.00 34.19           H   new
-HETATM    0  H21 PHQ C   1      32.245  68.347  11.689  1.00 34.19           H   new
-ATOM   2047  N   VAL C   2      31.831  65.913   8.705  1.00 33.43           N
-ATOM   2048  CA  VAL C   2      31.177  64.625   8.534  1.00 33.69           C
-ATOM   2049  C   VAL C   2      32.159  63.633   7.962  1.00 33.42           C
-ATOM   2050  O   VAL C   2      33.030  64.012   7.193  1.00 32.98           O
-ATOM   2051  CB  VAL C   2      29.919  64.830   7.676  1.00 34.20           C
-ATOM   2052  CG1 VAL C   2      29.511  63.626   6.830  1.00 34.25           C
-ATOM   2053  CG2 VAL C   2      28.738  65.276   8.536  1.00 33.98           C
-ATOM      0  HA  VAL C   2      30.847  64.202   9.494  1.00 33.69           H   new
-ATOM      0  HB  VAL C   2      30.197  65.621   6.964  1.00 34.20           H   new
-ATOM      0 HG11 VAL C   2      28.605  63.871   6.256  1.00 34.25           H   new
-ATOM      0 HG12 VAL C   2      30.326  63.371   6.137  1.00 34.25           H   new
-ATOM      0 HG13 VAL C   2      29.307  62.768   7.487  1.00 34.25           H   new
-ATOM      0 HG21 VAL C   2      27.852  65.415   7.899  1.00 33.98           H   new
-ATOM      0 HG22 VAL C   2      28.526  64.509   9.295  1.00 33.98           H   new
-ATOM      0 HG23 VAL C   2      28.984  66.226   9.034  1.00 33.98           H   new
-ATOM   2054  N   ALA C   3      32.035  62.360   8.347  1.00 32.87           N
-ATOM   2055  CA  ALA C   3      32.839  61.280   7.792  1.00 32.96           C
-ATOM   2056  C   ALA C   3      32.447  60.928   6.383  1.00 33.15           C
-ATOM   2057  O   ALA C   3      31.277  60.969   6.038  1.00 33.63           O
-ATOM   2058  CB  ALA C   3      32.737  60.042   8.677  1.00 32.29           C
-ATOM      0  H   ALA C   3      31.382  62.059   9.042  1.00 32.87           H   new
-ATOM      0  HA  ALA C   3      33.878  61.639   7.763  1.00 32.96           H   new
-ATOM      0  HB1 ALA C   3      33.347  59.233   8.249  1.00 32.29           H   new
-ATOM      0  HB2 ALA C   3      33.102  60.281   9.687  1.00 32.29           H   new
-ATOM      0  HB3 ALA C   3      31.688  59.717   8.735  1.00 32.29           H   new
-ATOM   2059  N   ASP C   4      33.443  60.567   5.567  1.00 33.06           N
-ATOM   2060  CA  ASP C   4      33.237  60.152   4.185  1.00 32.09           C
-ATOM   2061  C   ASP C   4      33.055  58.632   4.026  1.00 32.01           C
-ATOM   2062  O   ASP C   4      33.861  58.128   2.968  1.00 33.51           O
-ATOM   2063  CB  ASP C   4      34.362  60.707   3.307  1.00 32.13           C
-ATOM   2064  CG  ASP C   4      33.862  61.840   2.435  1.00 31.93           C
-ATOM   2065  OD1 ASP C   4      32.646  61.902   2.146  1.00 33.03           O
-ATOM   2066  OD2 ASP C   4      34.692  62.681   2.028  1.00 31.12           O
-ATOM      0  H   ASP C   4      34.402  60.557   5.849  1.00 33.06           H   new
-ATOM      0  HA  ASP C   4      32.283  60.580   3.843  1.00 32.09           H   new
-ATOM      0  HB2 ASP C   4      35.186  61.064   3.942  1.00 32.13           H   new
-ATOM      0  HB3 ASP C   4      34.769  59.904   2.674  1.00 32.13           H   new
-HETATM 2067  C1  CF0 C   5      33.344  57.813   5.283  1.00 31.08           C
 TER    2068      CF0 C   5
 END
