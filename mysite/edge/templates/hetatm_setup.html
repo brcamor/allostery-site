@@ -18,10 +18,10 @@ Select the heteroatoms you would like to include in the analysis
   console: "jmolApplet0_infodiv"
   }
   jmolApplet0 = Jmol.getApplet("jmolApplet0", Info);
-  Jmol.script(jmolApplet0,'background black;load {{ MEDIA_URL }}{{ pdb_id }}.pdb ;select all;cartoon only; color lightgrey;set hermiteLevel 8; select hetero and not solvent; wireframe on;wireframe 50;')
+  Jmol.script(jmolApplet0,'background black;load {{ MEDIA_URL }}{{ pdb_id }}.pdb ;select all;cartoon only; color lightgrey;set hermiteLevel 5; select hetero and not solvent; wireframe on;wireframe 50;spacefill 25%;')
 
 function colorHetatmRed(chkbox, chainID, resNum){
-if (chckbox.checked) {
+if (chkbox.checked) {
   Jmol.script (jmolApplet0,'select ' + resNum + ':' + chainID + '; color red;');
   }
 else {
