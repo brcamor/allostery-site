@@ -13,12 +13,30 @@ Source residues are:
 
 {% block results %}
 
-<div class="row" id="id_bond_pp_graph">
+<div class="row">
+  <div class="col-md-8" id="id_bond_pp_graph">
+  </div>
+  <div class="col-md-4">
+    <script type="text/javascript">
+      var Info = {
+      width: 400,
+      height: 400,
+      use: "WebGL HTML5",
+      j2sPath: "static/jsmol/j2s",
+      console: "jmolApplet0_infodiv"
+      }
+      jmolApplet0 = Jmol.getApplet("jmolApplet0", Info);
+      Jmol.script(jmolApplet0,'background black; set hermiteLevel 3; load {{ MEDIA_URL }}{{ pdb_file }}; select all; cartoon only; color lightgrey; select hetero and not solvent; wireframe on;wireframe 50;');
+      {% for residue in source_residues %}
+      Jmol.script(jmolApplet0, 'select {{residue.0}}:{{residue.1}}; wireframe on; wireframe 50; color green;');
+      {% endfor %}
+    </script>
+  </div>
 </div>
 
 <script type="text/javascript" src="static/d3/bond_graph.js"></script>
 <script>
-make_bond_graph("static/edge/{{ distance_bond_pp_file }}")
+  make_bond_graph("static/edge/{{ distance_bond_pp_file }}")
 </script>
 
 <table class="table table-striped table-hover" id="id_bond_pp_table">
@@ -39,9 +57,29 @@ make_bond_graph("static/edge/{{ distance_bond_pp_file }}")
   </tbody>
 </table>  
 
-<div class="row" id="id_residue_pp_graph">
+
+<div class="row">
+<div class="col-md-8" id="id_residue_pp_graph">
+</div>
+<div class="col-md-4">
+<script type="text/javascript">
+  var Info = {
+  width: 400,
+  height: 400,
+    use: "WebGL HTML5",
+  j2sPath: "static/jsmol/j2s",
+  console: "jmolApplet0_infodiv"
+  }
+  jmolApplet1 = Jmol.getApplet("jmolApplet1", Info);
+  Jmol.script(jmolApplet1,'background black; set hermiteLevel 3; load {{ MEDIA_URL }}{{ pdb_file }}; select all; cartoon only; color lightgrey; select hetero and not solvent; wireframe on;wireframe 50;');
+  {% for residue in source_residues %}
+  Jmol.script(jmolApplet1, 'select {{residue.0}}:{{residue.1}}; wireframe on; wireframe 50; color green;');
+  {% endfor %}
+</script>
+</div>
 </div>
 
+<script src="static/jsmol/jsmol_functions.js"></script>
 <script type="text/javascript" src="static/d3/residue_graph.js"></script>
 <script>
 make_residue_graph("static/edge/{{ distance_residue_pp_file }}")

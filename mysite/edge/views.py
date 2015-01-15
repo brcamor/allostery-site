@@ -77,26 +77,36 @@ def hetatm_setup(request):
         return redirect('/source')
 
     else:
-
+        
         pdb_id = request.session.get('pdb_id')
         pdb_file_name = settings.MEDIA_ROOT + '/' + pdb_id + '.pdb'
-        chains = request.session.get('all_chains')
+        included_chains = request.session.get('included_chains')
         removed_chains = request.session.get('removed_chains', [])
 
-        protein = pn.molecules.Protein()
-        parser = pn.parsing.PDBParser(pdb_file_name)
-        parser.parse(
-            protein, 
-            strip={
-                'res_name' : ['HOH'], 
-                'chain' : removed_chains
-            }
-        )
-        final_pdb_name = protein.pdb_id.split('/')[-1]
+        hetatms = get_hetatms(pdb_file_name, included_chains)
 
-        if pdb_id and chains:
-            pdb_file_name = settings.MEDIA_ROOT + '/' + pdb_id + '.pdb'
-            hetatms = get_hetatms(pdb_file_name, chains)
+        if len(hetatms) == 0:
+            request.session['hetatms'] = hetatms
+            return redirect('/source')
+        
+        elif pdb_id and included_chains:
+            
+            # Parse pdb file so that jmol viewer shows structure with
+            # updated chains
+            protein = pn.molecules.Protein()
+            parser = pn.parsing.PDBParser(pdb_file_name)
+            parser.parse(
+                protein, 
+                strip={
+                    'res_name' : ['HOH'], 
+                    'chain' : removed_chains
+                }
+            )
+
+            # Get name of pdb file name with removed chains for 
+            # viewing in the jmol applet
+            final_pdb_name = protein.pdb_id.split('/')[-1]
+
             request.session['hetatms'] = hetatms
 
             return render(
@@ -106,7 +116,6 @@ def hetatm_setup(request):
             )
         
         else:
-            print "pdb_id and chains not found"
             return redirect('/')
 
 def source_setup(request):
@@ -208,6 +217,9 @@ def results(request):
         residue_results_file = pdb_id + "_residue_results.csv"
         results.residue_results_to_csv(name=settings.BASE_DIR + '/edge/static/edge/' + 
                                     residue_results_file)
+
+        final_pdb_name = protein.pdb_id.split('/')[-1]
+
         return render(request,
                       'results.html',
                       {
@@ -217,6 +229,7 @@ def results(request):
                           'top_residues_pp' : top_residues_pp, 
                           'distance_bond_pp_file' : bond_results_file,
                           'distance_residue_pp_file' : residue_results_file,
+                          'pdb_file' : final_pdb_name,
                       }
         )
 

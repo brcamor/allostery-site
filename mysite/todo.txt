@@ -1,19 +1,32 @@
-Biological unit!
-Quantile scores
+jmol applet for showing bonds - easiest if add column to csv file with bond ids
+
 Improve source residue selection page - drop downs and 'add' button? (AJAX to avoid page refresh)
 
+Improve styling
+	- background
+	- banner 
+	- home button
+	- header
+	- design results page
+
 Work out how to color residues by pp in Jmol
-Work out how to show residues in jmol when you click on residue in results graph
+
+Biological unit!
+Quantile scores
+
+Add box below jsmol applets to allow manipulation with jmol commands
+
+Retrive name and drop down on home (search) page 
 
 Extra page between selecting source residues and running analysis?
       - summarise included chains/hetatms and chosen source residues
       - allow to choose some option for the analysis e.g. quantile scores/transients/edge-edge
 
-Refactor d3.js graph scripts into single function
-
 Graceful failure:
 	 - "try"
 	 - deal with not finding HETATM in the database by removing that atom
+
+Refactor d3.js graph scripts into single function
 
 Better way to check if chains/hetatms/source pages already visited
 
@@ -23,3 +36,5 @@ Work out how to download results files
 
 Refactor tests (unit and functional) to be more DRY
 Comment
+
+Transients analysis

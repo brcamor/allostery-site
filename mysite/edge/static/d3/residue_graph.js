@@ -79,10 +79,8 @@ var svg = d3.select("#id_residue_pp_graph")
                      d3.select(this)
                        .attr("fill", "blue");
                    })
-                   .on("click", click);
+                   .on("click", function(d) {showResidueSticksGraph(d);});
                    
-                    
-
   circles.attr("cx", function(d) {
               return xScale(d[1]);
           })
