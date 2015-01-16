@@ -6,54 +6,50 @@
 Select the residues you would like to use as the source in the analysis 
 {% endblock %}
 
-{% block protein_view %}
+{% block table %}
+<div class="col-md-5">
+  <form role="form" method="POST" action="">
+    <table class="table" id="id_source_table">
+      <thead>
+	<tr>
+	  <th>Residue number</th>
+	  <th>Chain</th>
+	  <th>Selected</th>
+	</tr>
+      </thead>
+      
+      <tbody>
+	{% for residue in residues %}
+	<tr>
+	  <td>{{ residue.0 }}</td>
+	  <td>{{ residue.1 }}</td>
+	  <td><input type="checkbox" 
+		     id="residue_checkbox_{{forloop.counter}}" 
+		     name="residues" 
+		     value="{{forloop.counter | add:"-1" }}"
+		     onclick="showResidueSticks(this, '{{ residue.0 }}','{{ residue.1 }}')"></td>
+	</tr>
+	{% endfor %}
+      </tbody>
+    </table>
+    {% csrf_token %}
+    <input type="submit" class="btn btn-large btn-primary" id="continue_button" value="Continue">
+  </form>
+</div>
 
-<div id="jmol_protein_view" align="center">
-<script type="text/javascript">
-var Info = {
-  width: 800,
-  height: 500,
+<div class="col-md-7 jmol_container">
+<div class="fixed col-md-7">
+  <script type="text/javascript">
+    var Info = {
+    width: 600,
+    height: 600,
     use: "WebGL HTML5",
-  j2sPath: "static/jsmol/j2s",
-  console: "jmolApplet0_infodiv"
-  };
-  jmolApplet0 = Jmol.getApplet("jmolApplet0", Info);
-  Jmol.script(jmolApplet0,'background black;load {{ MEDIA_URL }}{{ pdb_file }} ;select all;cartoon only; color lightgrey; set hermiteLevel 3; select hetero and not solvent; wireframe on;wireframe 50;')
+    j2sPath: "static/jsmol/j2s",
+    console: "jmolApplet0_infodiv"
+    };
+    jmolApplet0 = Jmol.getApplet("jmolApplet0", Info);
+    Jmol.script(jmolApplet0,'background black;load {{ MEDIA_URL }}{{ pdb_file }} ;select all;cartoon only; color lightgrey; set hermiteLevel 3; select hetero and not solvent; wireframe on;wireframe 50;')
 </script>
 <script src="static/jsmol/jsmol_functions.js"></script>
-{% endblock %}
-
-{% block table %}
-
-<form role="form" method="POST" action="">
-
-  <table class="table" id="id_source_table">
-    <thead>
-      <tr>
-	<th>Residue number</th>
-	<th>Chain</th>
-	<th>Selected</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      {% for residue in residues %}
-      <tr>
-	<td>{{ residue.0 }}</td>
-	<td>{{ residue.1 }}</td>
-	<td><input type="checkbox" 
-		   id="residue_checkbox_{{forloop.counter}}" 
-		   name="residues" 
-		   value="{{forloop.counter | add:"-1" }}"
-		   onclick="showResidueSticks(this, '{{ residue.0 }}','{{ residue.1 }}')"></td>
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
-
-  {% csrf_token %}
-  <input type="submit" class="btn btn-large btn-primary" id="continue_button" value="Continue">
-
-</form>
-  
+</div>
 {% endblock %}

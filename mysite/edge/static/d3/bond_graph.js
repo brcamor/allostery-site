@@ -32,7 +32,7 @@ var svg = d3.select("#id_bond_pp_graph")
   } else {
      console.log(data);
 
-     var dataset = data.map(function(d) {return [d['bond_name'], +d['distance'], +d['pp']];});
+      var dataset = data.map(function(d) {return [d['bond_name'], +d['distance'], +d['pp'], d['atom1'], d['atom2']];});
      makeScatterPlot(dataset);
          }
   });
@@ -78,7 +78,8 @@ var svg = d3.select("#id_bond_pp_graph")
                    .on("mouseout", function(d) {
                      d3.select(this)
                        .attr("fill", "blue");
-                   });
+                   })
+                   .on("click", function(d) {showBond(d);});
                    
                     
 

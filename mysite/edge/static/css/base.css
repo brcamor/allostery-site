@@ -17,3 +17,11 @@
 .label {
     fill: #777;
 }
+
+.jmol_container {
+    position : relative;
+}
+
+.fixed {
+    position : fixed;
+}

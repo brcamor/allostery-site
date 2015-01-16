@@ -19,6 +19,7 @@
   <body>
     
     <div class="container">
+
       <div class="header">
         <h3>Predicting allosteric sites</h3>
       </div>    
@@ -28,15 +29,8 @@
 	  <h1>{% block header_text %}{% endblock %}</h1>
 	  <br>
 	  <p id="header_lead" class="lead">{% block header_sub_text %} {% endblock %}</p>
-
-	  {% block protein_view %}
-	  {% endblock %}
-
-	  <br>
-
 	  {% block form %} 
 	  {% endblock %}
-
 	</div>      
 
 	<div class="row">
@@ -49,6 +43,9 @@
 	  {% endblock %}
 	</div>
       </div>
+
     </div>
+  
   </body>
+
 </html>
