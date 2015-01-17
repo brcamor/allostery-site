@@ -40,15 +40,15 @@ Select the heteroatoms you would like to include in the analysis
 <div class="col-md-7" id="jmol_container">
 <script type="text/javascript">
 var Info = {
-  width: 600,
-  height: 600,
-    use: "WebGL HTML5",
+  width: 500,
+  height: 500,
+    use: "HTML5",
   j2sPath: "static/jsmol/j2s",
   console: "jmolApplet0_infodiv"
   };
 
   jmolApplet0 = Jmol.getApplet("jmolApplet0", Info);
-  Jmol.script(jmolApplet0,'background black;load {{ MEDIA_URL }}{{ pdb_file }};select all;cartoon only; color lightgrey;set hermiteLevel 3; select hetero and not solvent; wireframe on;wireframe 50;spacefill 25%;zoom 150;')
+  Jmol.script(jmolApplet0,'background white;load {{ MEDIA_URL }}{{ pdb_file }};select all;cartoon only; color lightgrey;set hermiteLevel 3; select hetero and not solvent; wireframe on;wireframe 50;spacefill 100%;zoom 150;set antialiasdisplay true;')
 </script>
 <script src="static/jsmol/jsmol_functions.js"></script>
 </div>

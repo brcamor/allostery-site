@@ -1,8 +1,8 @@
 function make_residue_graph(data_file) {
 
 var margin = {top:20, right:20, bottom:20, left:40}
-var width = 600 - margin.right;
-var height = 400 - margin.top - margin.bottom
+var width = 400 - margin.right;
+var height = 600 - margin.top - margin.bottom
 
 var svg = d3.select("#id_residue_pp_graph")
             .append("svg")

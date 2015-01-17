@@ -11,7 +11,7 @@
 
 .axis text {
     font-family: sans-serif;
-    fton-size: 11px;
+    font-size: 11px;
 }
 
 .label {
@@ -24,4 +24,8 @@
 
 .fixed {
     position : fixed;
+}
+
+.header {
+    color : white;
 }

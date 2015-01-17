@@ -1,4 +1,4 @@
-jmol applet for showing bonds - easiest if add column to csv file with bond ids
+Order residues by int rather than string
 
 Improve source residue selection page - drop downs and 'add' button? (AJAX to avoid page refresh)
 
