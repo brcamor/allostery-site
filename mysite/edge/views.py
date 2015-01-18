@@ -158,7 +158,7 @@ def source_setup(request):
 
         return render(
             request,
-            'source_setup.html',
+            'source_setup2.html',
             {
                 'pdb_id' : request.session['pdb_id'],
                 'residues': residue_list,

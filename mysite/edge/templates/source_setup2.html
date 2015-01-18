@@ -7,37 +7,22 @@ Select the residues you would like to use as the source in the analysis
 {% endblock %}
 
 {% block table %}
-
-<div class="col-md-5" id="residue_form">
+<div class="col-md-5">
   <form role="form" method="POST" action="">
-    <table class="table" id="id_source_table">
-      <thead>
-	<tr>
-	  <th>Residue number</th>
-	  <th>Chain</th>
-	  <th>Selected</th>
-	</tr>
-      </thead>
-      
-      <tbody>
-	{% for residue in residues %}
-	<tr>
-	  <td>{{ residue.0 }}</td>
-	  <td>{{ residue.1 }}</td>
-	  <td><input type="checkbox" 
-		     id="residue_checkbox_{{forloop.counter}}" 
-		     name="residues" 
-		     value="{{forloop.counter | add:"-1" }}"
-		     onclick="showResidueSticks(this, '{{ residue.0 }}','{{ residue.1 }}')"></td>
-	</tr>
-	{% endfor %}
-      </tbody>
-    </table>
-    {% csrf_token %}
-    <input type="submit" class="btn btn-large btn-primary" id="continue_button" value="Continue">
-  </form>
-</div>
+	  <select name="residues" multiple="multiple" id="residueSelect" class="form-control" style="height: 500px">
+	    {% for residue in residues %}
+	    <option id="residue_checkbox_{{forloop.counter}}" 
+		     name="residues"
+		     value="{{forloop.counter | add:'-1' }}"
+		     >{{residue.0}} {{ residue.1 }} </option>
+	    {% endfor %}
+	  </select>
 
+	  {% csrf_token %}
+	  <br>
+	  <input type="submit" class="btn btn-large btn-primary" id="continue_button" value="Continue">
+ </form>
+</div>
 
 
 <div class="col-md-7 jmol_container">
@@ -45,7 +30,7 @@ Select the residues you would like to use as the source in the analysis
   <script type="text/javascript">
     var Info = {
     width: 500,
-    height: 500,
+    height: 00,
     use: "HTML5",
     j2sPath: "static/jsmol/j2s",
     console: "jmolApplet0_infodiv"
@@ -54,5 +39,19 @@ Select the residues you would like to use as the source in the analysis
     Jmol.script(jmolApplet0,'background white;load {{ MEDIA_URL }}{{ pdb_file }} ;select all;cartoon only; color lightgrey; set hermiteLevel 3; select hetero and not solvent; wireframe on;wireframe 50;spacefill 100%; set antialiasdisplay true; zoom 150;')
 </script>
 <script src="static/jsmol/jsmol_functions.js"></script>
+
+<script>
+document.getElementById("residueSelect").onchange = function(){
+var residueName = $('#residueSelect').find(":selected").text();
+var res = residueName.split(" ");
+console.log(res)
+console.log( (res.length - 1)/2);
+for (i = 0; i < (res.length - 1)/2; i++) {
+console.log(res[2*i] + res[2*i+1]);
+showResidueSticks2(res[2*i], res[2*i+1]);    
+}
+};
+</script>
+
 </div>
 {% endblock %}
