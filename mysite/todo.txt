@@ -1,9 +1,9 @@
 Order residues by int rather than string
 
-Improve source residue selection page - drop downs and 'add' button? (AJAX to avoid page refresh)
+Read about separation of html/javascript and Tidy up javascript in html files
 
 Improve styling
-	- background
+	- home page figure
 	- banner 
 	- home button
 	- header

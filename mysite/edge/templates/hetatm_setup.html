@@ -37,20 +37,28 @@ Select the heteroatoms you would like to include in the analysis
 </form>
 </div>
 
-<div class="col-md-7" id="jmol_container">
+<div class="col-md-7" id="jmol_protein_view">
+</div>
+  
+{% endblock %}
+
+{% block scripts %}
+
+<script src="static/jsmol/jsmol_functions.js"></script>
 <script type="text/javascript">
-var Info = {
+  $(document).ready(function(){
+  var Info = {
   width: 500,
   height: 500,
-    use: "HTML5",
+  use:"HTML5",
   j2sPath: "static/jsmol/j2s",
   console: "jmolApplet0_infodiv"
   };
-
-  jmolApplet0 = Jmol.getApplet("jmolApplet0", Info);
-  Jmol.script(jmolApplet0,'background white;load {{ MEDIA_URL }}{{ pdb_file }};select all;cartoon only; color lightgrey;set hermiteLevel 3; select hetero and not solvent; wireframe on;wireframe 50;spacefill 100%;zoom 150;set antialiasdisplay true;')
+  Jmol.setDocument(0);
+  Jmol.getApplet("jmolApplet0", Info);
+  $("#jmol_protein_view").html(Jmol.getAppletHtml(jmolApplet0));
+  Jmol.script(jmolApplet0,'background white;load {{ MEDIA_URL }}{{ pdb_file }};select all;cartoon only; color lightgrey;set hermiteLevel 3; select hetero and not solvent; wireframe on;wireframe 50;spacefill 100%;zoom 150;set antialiasdisplay true;');
+  });
 </script>
-<script src="static/jsmol/jsmol_functions.js"></script>
-</div>
-  
+
 {% endblock %}

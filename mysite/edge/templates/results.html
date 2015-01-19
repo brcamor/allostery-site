@@ -19,36 +19,11 @@ Source residues are:
   <div class="col-md-6" id="id_bond_pp_graph">
   </div>
 
-  <!-- Javascript for jsmol applet -->
-  <div class="col-md-6">
-    <script type="text/javascript">
-      var Info = {
-      width: 500,
-      height: 500,
-      use: "HTML5",
-      j2sPath: "static/jsmol/j2s",
-      console: "jmolApplet0_infodiv"
-      }
-      jmolApplet0 = Jmol.getApplet("jmolApplet0", Info);
-      Jmol.script(jmolApplet0,'background white; load {{ MEDIA_URL }}{{ pdb_file }}; select all; cartoon only; color lightgrey; select hetero and not solvent; wireframe on;wireframe 50; zoom 150;set antialiasdisplay true;');
-      {% for residue in source_residues %}
-      Jmol.script(jmolApplet0, 'select {{residue.0}}:{{residue.1}}; wireframe on; wireframe 50; color green;');
-      {% endfor %}
-    </script>
+  <!-- Container for bond jsmol applet -->
+  <div class="col-md-6" id="jmol_view_bond">
   </div>
 
 </div>
-
-<!-- Javascript for making bond graph -->
-<script src="static/jsmol/jsmol_functions.js"></script>
-<script type="text/javascript" src="static/d3/bond_graph.js"></script>
-<script>
-  make_bond_graph("static/edge/{{ distance_bond_pp_file }}")
-</script>
-
-
-<br>
-<br>
 
 <!-- Bond results table -->
 <div class="row">
@@ -79,34 +54,10 @@ Source residues are:
   </div>
 
   <!-- Container for jmol applet -->
-  <div class="col-md-6">
-    <!-- Javascript for jmol applet -->
-    <script type="text/javascript">
-      var Info = {
-      width: 500,
-      height: 500,
-      use: "HTML5",
-      j2sPath: "static/jsmol/j2s",
-      console: "jmolApplet0_infodiv"
-      }
-      jmolApplet1 = Jmol.getApplet("jmolApplet1", Info);
-      Jmol.script(jmolApplet1,'background white; set hermiteLevel 3; load {{ MEDIA_URL }}{{ pdb_file }}; select all; cartoon only; color lightgrey; select hetero and not solvent; wireframe on;wireframe 50; zoom 150;set antialiasdisplay true;');
-      {% for residue in source_residues %}
-      Jmol.script(jmolApplet1, 'select {{residue.0}}:{{residue.1}}; wireframe on; wireframe 50; color green;');
-      {% endfor %}
-    </script>
+  <div class="col-md-6" id="jmol_view_residue">
   </div>
 
 </div>
-
-<!-- Javascript for residue_graph -->
-<script type="text/javascript" src="static/d3/residue_graph.js"></script>
-<script>
-make_residue_graph("static/edge/{{ distance_residue_pp_file }}")
-</script>
-
-<br>
-<br>
 
 <!-- Residue results table row -->
 <div class="row">
@@ -130,5 +81,52 @@ make_residue_graph("static/edge/{{ distance_residue_pp_file }}")
     </table>  
   </div>
 </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+
+<script src="static/jsmol/jsmol_functions.js"></script>
+<script type="text/javascript" src="static/d3/bond_graph.js"></script>
+<script type="text/javascript" src="static/d3/residue_graph.js"></script>
+<script type="text/javascript">
+      $(document).ready(function() {
+
+      Jmol.setDocument(0)
+      
+      var Info0 = {
+      width: 500,
+      height: 500,
+      use: "HTML5",
+      j2sPath: "static/jsmol/j2s",
+      console: "jmolApplet0_infodiv"
+      }
+
+      Jmol.getApplet("jmolApplet0", Info0);
+      $("#jmol_view_bond").html(Jmol.getAppletHtml(jmolApplet0));
+      Jmol.script(jmolApplet0,'background white; load {{ MEDIA_URL }}{{ pdb_file }}; select all; cartoon only; color lightgrey; select hetero and not solvent; wireframe on;wireframe 50; zoom 150;set antialiasdisplay true;');
+      {% for residue in source_residues %}
+      Jmol.script(jmolApplet0, 'select {{residue.0}}:{{residue.1}}; wireframe on; wireframe 50; color green;');
+      {% endfor %}
+
+      var Info1 = {
+      width: 500,
+      height: 500,
+      use: "HTML5",
+      j2sPath: "static/jsmol/j2s",
+      console: "jmolApplet1_infodiv"
+      }
+      Jmol.getApplet("jmolApplet1", Info1);
+      $("#jmol_view_residue").html(Jmol.getAppletHtml(jmolApplet1));
+      Jmol.script(jmolApplet1,'background white; set hermiteLevel 3; load {{ MEDIA_URL }}{{ pdb_file }}; select all; cartoon only; color lightgrey; select hetero and not solvent; wireframe on;wireframe 50; zoom 150;set antialiasdisplay true;');
+      {% for residue in source_residues %}
+      Jmol.script(jmolApplet1, 'select {{residue.0}}:{{residue.1}}; wireframe on; wireframe 50; color green;');
+      {% endfor %}
+
+      make_bond_graph("static/edge/{{ distance_bond_pp_file }}");
+      make_residue_graph("static/edge/{{ distance_residue_pp_file }}");
+});
+</script>
 
 {% endblock %}
