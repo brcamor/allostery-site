@@ -1,6 +1,14 @@
+Refactor tests (unit and functional) to be more DRY - i.e. use helper functions in functional tests
+Comment
+How to test javascript?
+
 Order residues by int rather than string
 
-Read about separation of html/javascript and Tidy up javascript in html files
+Move jquery into script file?
+     - may need to use JSON to dump data into template and then call javascript function on this object	
+     - see http://stackoverflow.com/questions/1445989/passing-python-data-to-javascript-via-django?rq=1 
+
+Data model?
 
 Improve styling
 	- home page figure
@@ -34,7 +42,5 @@ Refactor setup info into setup_params class?
 
 Work out how to download results files
 
-Refactor tests (unit and functional) to be more DRY
-Comment
 
 Transients analysis
