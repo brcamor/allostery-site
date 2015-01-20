@@ -1,21 +1,16 @@
+from .base import FunctionalTest
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import Select
 import unittest
+from unittest import skip
 import sys
 from django.test import TestCase
 import proteinnetwork as pn
 
-class NewVisitorTest(TestCase):
+class NewVisitorTest(FunctionalTest):
     
-    def setUp(self):
-        self.browser = webdriver.Firefox()
-        self.browser.implicitly_wait(3)        
-        self.server_url = "http://155.198.224.245:8000"
-
-    def tearDown(self):
-        self.browser.quit()
-
-    def test_can_choose_a_protein_and_pull_info_from_PDB(self):
+    def test_can_enter_a_valid_PDB_ID_and_carry_out_edge_edge_analysis(self):
 
         # Ben decides to check out the homepage of a new protein
         # analysis webserver
@@ -150,28 +145,16 @@ class NewVisitorTest(TestCase):
             header_lead_text
         )
         
-        table = self.browser.find_element_by_id('id_source_table')
-        headers = table.find_elements_by_tag_name('th')
-        header_text = [header.text for header in headers]
-        self.assertIn('Residue number', header_text)
-        self.assertIn('Chain', header_text)
-        self.assertIn('Selected', header_text)
-
-        rows = table.find_elements_by_tag_name('td')
-        row_text = [row.text for row in rows]
-        self.assertEqual('125', row_text[0])
-        self.assertEqual('A', row_text[1])
-        self.assertEqual('C', row_text[-2])
-        self.assertEqual('5', row_text[-3])
-
-        # He selects the first few residues as his source (125-128 in chain A)
+        # He selects the residues in chain C as his source
         # and clicks "Continue".  He is taken to a new url "results"
 
-        self.browser.find_element_by_id('residue_checkbox_1').click()
-        self.browser.find_element_by_id('residue_checkbox_2').click()
-        self.browser.find_element_by_id('residue_checkbox_3').click()
-        self.browser.find_element_by_id('residue_checkbox_4').click()
-
+        select = Select(self.browser.find_element_by_id("residueSelect"))
+        select.select_by_visible_text("1 C")
+        select.select_by_visible_text("2 C")
+        select.select_by_visible_text("3 C")
+        select.select_by_visible_text("4 C")
+        select.select_by_visible_text("5 C")
+        
         self.browser.find_element_by_id('continue_button').click()
 
         time.sleep(2)
@@ -187,13 +170,11 @@ class NewVisitorTest(TestCase):
         
         bond_pp_headers = bond_pp_table.find_elements_by_tag_name('th')
         bond_pp_headers_text = [header.text for header in bond_pp_headers]
-        self.assertEqual('Atom 1', bond_pp_headers_text[0])
-        self.assertEqual('Atom 2', bond_pp_headers_text[1])
-        self.assertEqual('Perturbation Propensity', bond_pp_headers_text[2])
+        self.assertEqual('Bond', bond_pp_headers_text[0])
+        self.assertEqual('Perturbation Propensity', bond_pp_headers_text[1])
         bond_pp_rows = bond_pp_table.find_elements_by_tag_name('td')
         bond_pp_rows_text = [row.text for row in bond_pp_rows]
-        self.assertEqual('VAL 133 H', bond_pp_rows_text[0])
-        self.assertEqual('GLU 130 O', bond_pp_rows_text[1])
+        self.assertEqual('ARG240 A 1HH1 : ASP336 B OD1', bond_pp_rows_text[0])
 
         residue_pp_table = self.browser.find_element_by_id('id_residue_pp_table')
         
@@ -203,12 +184,13 @@ class NewVisitorTest(TestCase):
         self.assertEqual('Perturbation Propensity', residue_pp_headers_text[1])
         residue_pp_rows = residue_pp_table.find_elements_by_tag_name('td')
         residue_pp_rows_text = [row.text for row in residue_pp_rows]
-        self.assertEqual('130 A', residue_pp_rows_text[0])
-        self.assertEqual('133 A', residue_pp_rows_text[2])
+        self.assertEqual('TRP340 B', residue_pp_rows_text[0])
+        self.assertEqual('ARG179 A', residue_pp_rows_text[2])
 
         # He also notices an image showing the perturbation
         # propensity of bonds plotted against their distance from 
         # the source residues
+
 
         
 
