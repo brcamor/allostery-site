@@ -85,7 +85,7 @@ class ProteinHetatmSetupTest(TestCase):
         request.method = 'GET'
         request.session = self.engine.SessionStore(None)
         request.session['pdb_id'] = '2HBQ'
-        request.session['chains'] = ['A', 'B', 'C']
+        request.session['included_chains'] = ['A', 'B', 'C']
 
         response = hetatm_setup(request)
 
@@ -96,8 +96,9 @@ class ProteinHetatmSetupTest(TestCase):
         request.method = 'GET'
         request.session = self.engine.SessionStore(None)
         request.session['pdb_id'] = '2HBQ'
-        request.session['chains'] = ['A', 'B', 'C']
-        
+        request.session['included_chains'] = ['A', 'B', 'C']
+        request.session['removed_chains'] = []
+
         response = hetatm_setup(request)
         
         self.assertIn(('PHQ', 'C', '1'), request.session.get('hetatms'))
@@ -108,7 +109,8 @@ class ProteinHetatmSetupTest(TestCase):
         request.method = 'POST'
         request.session = self.engine.SessionStore(None)
         request.session['pdb_id'] = '2HBQ'
-        request.session['chains'] = ['A', 'B', 'C']
+        request.session['included_chains'] = ['A', 'B', 'C']
+        request.session['removed_chains'] = []
         request.session['hetatms'] = [('PHQ', 'C', '1'), ('CF0', 'C', '5')]
 
         _dict = {'hetatms' : '0'}
@@ -125,8 +127,9 @@ class ProteinHetatmSetupTest(TestCase):
         request.method = 'POST'
         request.session = self.engine.SessionStore(None)
         request.session['pdb_id'] = '2HBQ'
-        request.session['chains'] = ['A', 'B', 'C']
+        request.session['included_chains'] = ['A', 'B', 'C']
         request.session['hetatms'] = [('PHQ', 'C', '1'), ('CF0', 'C', '5')]
+        request.session['removed_chains'] = []
         
         _dict = {'hetatms' : '0'}
         _qdict = QueryDict('', mutable=True)
@@ -168,7 +171,7 @@ class ProteinSourceSetupTest(TestCase):
 
         response = source_setup(request)
         residue_list = request.session['residue_list']
-
+        print residue_list
         self.assertIn(('317', 'B'), residue_list)
         self.assertIn(('1', 'C'), residue_list)
         

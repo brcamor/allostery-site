@@ -2,6 +2,8 @@ Refactor tests (unit and functional) to be more DRY - i.e. use helper functions 
 Comment
 How to test javascript?
 
+Add line to d3 graphs for 95, 97.5, 99 quartiles calculated from test set
+
 Order residues by int rather than string
 
 Move jquery into script file?
