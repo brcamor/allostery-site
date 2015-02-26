@@ -9,6 +9,7 @@ import pandas as pd
 import urllib
 import gzip
 import os
+from edge.models import ProteinAnalysis
 
 def home_page(request):
 
@@ -92,6 +93,8 @@ def hetatm_setup(request):
         for idx in included_hetatms_idx:
             included_hetatms.append(hetatms[int(idx)])
         
+        request.session['included_hetatms'] = included_hetatms
+
         removed_hetatms = [hetatm for hetatm in hetatms
                            if hetatm not in included_hetatms]
 
@@ -209,6 +212,8 @@ def bond_results(request):
         pdb_file_name = settings.MEDIA_ROOT + '/' + pdb_id + '.pdb'
         removed_hetatms = request.session.get('removed_hetatms', [])
         removed_chains = request.session.get('removed_chains', [])
+        included_chains = request.session.get('included_chains')
+        included_hetatms = request.session.get('included_hetatms')
     
         # Load the protein
         protein = pn.molecules.Protein()
@@ -228,7 +233,7 @@ def bond_results(request):
         source_residues_list = request.session['source_residues']
         source_residues = map(tuple, source_residues_list)
 
-        # Calculate perturbation propensities
+        # Run calculations
         results = pn.edgeedge.edgeedge_run(protein, source_residues)
         results.calculate_bond_perturbation_propensities()
         results.bond_results.sort(columns=["pp"], ascending=[0], inplace=True)
@@ -240,14 +245,27 @@ def bond_results(request):
         top_residues_pp = zip(results.residue_results[0:10]['residue_name'],
                               results.residue_results[0:10]['pp'])
         
-        bond_results_file = pdb_id + "_bond_results.csv"
+        # Add the details of the current analysis to the database
+        new_analysis = ProteinAnalysis(
+            pdb_id=pdb_id, 
+            run_type='E', 
+            included_chains=str(included_chains), 
+            included_hetatms=str(included_hetatms),
+            source_residues=str(source_residues)
+        )
+        new_analysis.save()
+        
+        # Save the results to a csv file whose name is a combination of
+        # the pdb id and the id of the current run in the backend database
+        bond_results_file = pdb_id + '_' + str(new_analysis.id) + '_bond_results.csv'
         results.bond_results_to_csv(name=settings.BASE_DIR + '/edge/static/edge/' + 
                                     bond_results_file)
 
-        residue_results_file = pdb_id + "_residue_results.csv"
+        residue_results_file = pdb_id + '_' + str(new_analysis.id) + '_residue_results.csv'
         results.residue_results_to_csv(name=settings.BASE_DIR + '/edge/static/edge/' + 
                                     residue_results_file)
 
+        # Filename of the actual pdb file used to parse the atom/bond details
         final_pdb_name = protein.pdb_id.split('/')[-1]
 
         return render(request,
@@ -273,7 +291,9 @@ def atom_results(request):
         pdb_file_name = settings.MEDIA_ROOT + '/' + pdb_id + '.pdb'
         removed_hetatms = request.session.get('removed_hetatms', [])
         removed_chains = request.session.get('removed_chains', [])
-    
+        included_chains = request.session.get('included_chains')
+        included_hetatms = request.session.get('included_hetatms')
+
         # Load the protein
         protein = pn.molecules.Protein()
         parser = pn.parsing.PDBParser(pdb_file_name)
@@ -292,16 +312,29 @@ def atom_results(request):
         source_residues_list = request.session['source_residues']
         source_residues = map(tuple, source_residues_list)
 
-        # Calculate perturbation propensities
+        # Calculate thalf times
         results = pn.transients.transients_run(protein, source_residues)
         results.calculate_atom_thalf_times()
         results.calculate_residue_thalf_times()
-                
-        atom_results_file = pdb_id + "_atom_results.csv"
+
+         # Add the details of the current analysis to the database
+        new_analysis = ProteinAnalysis(
+            pdb_id=pdb_id, 
+            run_type='E', 
+            included_chains=str(included_chains), 
+            included_hetatms=str(included_hetatms),
+            source_residues=str(source_residues)
+        )
+        new_analysis.save()
+
+        # Save the results to a csv file whose name is a combination of
+        # the pdb id and the id of the current run in the backend database
+ 
+        atom_results_file = pdb_id + '_' + str(new_analysis.id) + "_atom_results.csv"
         results.atom_results_to_csv(name=settings.BASE_DIR + '/edge/static/edge/' + 
                                     atom_results_file)
 
-        residue_results_file = pdb_id + "_residue_results.csv"
+        residue_results_file = pdb_id + '_' + str(new_analysis.id) + "_residue_results.csv"
         results.residue_results_to_csv(name=settings.BASE_DIR + '/edge/static/edge/' + 
                                     residue_results_file)
 

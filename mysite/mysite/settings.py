@@ -57,8 +57,11 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'proteinwebsite',
+        'USER': 'ba11',
+        'PASSWORD': 'Ip077962ul',
+        'HOST': '127.0.0.1',
     }
 }
 
