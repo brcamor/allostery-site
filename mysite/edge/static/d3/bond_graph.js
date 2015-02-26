@@ -32,7 +32,7 @@ var svg = d3.select("#id_bond_pp_graph")
   } else {
      console.log(data);
 
-      var dataset = data.map(function(d) {return [d['bond_name'], +d['distance'], +d['pp'], d['atom1'], d['atom2']];});
+      var dataset = data.map(function(d) {return [d['bond_name'], +d['distance'], +d['pp_adjusted'], d['atom1'], d['atom2']];});
      makeScatterPlot(dataset);
          }
   });

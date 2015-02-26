@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block header_text %} Protein Results: {{ pdb_id }} {% endblock %}
+
+{% block header_sub_text %}
+
+Source residues are: 
+{% for residue in source_residues %} 
+{{residue.0}} {{residue.1}}  
+{% endfor %}
+
+{% endblock %}
+
+{% block results %}
+
+<div class="row">
+  
+  <!-- Container for bond graph -->
+  <div class="col-md-6" id="id_bond_pp_graph">
+  </div>
+
+  <!-- Container for bond jsmol applet -->
+  <div class="col-md-6" id="jmol_view_bond">
+  </div>
+
+</div>
+
+<!-- Bond results table -->
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <table class="table table-striped table-hover" id="id_bond_pp_table">
+      <caption>Top 10 bonds by perturbation propensity</caption>
+      <thead>
+	<tr>
+	  <th>Bond</th>
+	  <th>Perturbation Propensity</th>
+	</tr>
+      </thead>
+      <tbody>
+	{% for item in top_weak_bonds_pp %}
+	<tr> 
+	  <td>{{item.0}}</td>
+	  <td>{{item.1}}</td> 
+	</tr>
+	{% endfor %}
+      </tbody>
+    </table>  
+  </div>
+</div>
+
+<div class="row">
+  <!-- Container for residue graph -->
+  <div class="col-md-6" id="id_residue_pp_graph">
+  </div>
+
+  <!-- Container for jmol applet -->
+  <div class="col-md-6" id="jmol_view_residue">
+  </div>
+
+</div>
+
+<!-- Residue results table row -->
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <table class="table table-striped table-hover" id="id_residue_pp_table">
+      <caption>Top 10 residues by perturbation propensity</caption>
+      <thead>
+	<tr>
+	  <th>Residue</th>
+	  <th>Perturbation Propensity</th>
+	</tr>
+      </thead>
+      <tbody>
+	{% for item in top_residues_pp %}
+	<tr> 
+	  <td>{{item.0}}</td>
+	  <td>{{item.1}}</td> 
+	</tr>
+	{% endfor %}
+      </tbody>
+    </table>  
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+
+<script src="static/jsmol/jsmol_functions.js"></script>
+<script type="text/javascript" src="static/d3/bond_graph.js"></script>
+<script type="text/javascript" src="static/d3/residue_graph.js"></script>
+
+<script type="text/javascript">
+      $(document).ready(function() {
+
+      Jmol.setDocument(0)
+      
+      var Info0 = {
+      width: 500,
+      height: 500,
+      use: "HTML5",
+      j2sPath: "static/jsmol/j2s",
+      console: "jmolApplet0_infodiv"
+      }
+
+      Jmol.getApplet("jmolApplet0", Info0);
+      $("#jmol_view_bond").html(Jmol.getAppletHtml(jmolApplet0));
+      Jmol.script(jmolApplet0,'background white; load {{ MEDIA_URL }}{{ pdb_file }}; select all; cartoon only; color lightgrey; select hetero and not solvent; wireframe on;wireframe 50; zoom 150;set antialiasdisplay true;');
+      {% for residue in source_residues %}
+      Jmol.script(jmolApplet0, 'select {{residue.0}}:{{residue.1}}; wireframe on; wireframe 50; color green;');
+      {% endfor %}
+
+      var Info1 = {
+      width: 500,
+      height: 500,
+      use: "HTML5",
+      j2sPath: "static/jsmol/j2s",
+      console: "jmolApplet1_infodiv"
+      }
+      Jmol.getApplet("jmolApplet1", Info1);
+      $("#jmol_view_residue").html(Jmol.getAppletHtml(jmolApplet1));
+      Jmol.script(jmolApplet1,'background white; set hermiteLevel 3; load {{ MEDIA_URL }}{{ pdb_file }}; select all; cartoon only; color lightgrey; select hetero and not solvent; wireframe on;wireframe 50; zoom 150;set antialiasdisplay true;');
+      {% for residue in source_residues %}
+      Jmol.script(jmolApplet1, 'select {{residue.0}}:{{residue.1}}; wireframe on; wireframe 50; color green;');
+      {% endfor %}
+
+      make_bond_graph("static/edge/{{ distance_bond_pp_file }}");
+      make_residue_graph("static/edge/{{ distance_residue_pp_file }}");
+});
+</script>
+
+{% endblock %}

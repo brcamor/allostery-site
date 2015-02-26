@@ -1,3 +1,6 @@
+Improve biological unit styling
+If no biological unit found, fail gracefully
+
 Refactor tests (unit and functional) to be more DRY - i.e. use helper functions in functional tests
 Comment
 How to test javascript?
@@ -21,7 +24,6 @@ Improve styling
 
 Work out how to color residues by pp in Jmol
 
-Biological unit!
 Quantile scores
 
 Add box below jsmol applets to allow manipulation with jmol commands

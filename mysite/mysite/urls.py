@@ -10,11 +10,12 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', 'edge.views.home_page', name='home'),
+    url(r'^home', 'edge.views.home_page', name='home'),
     url(r'^chains', 'edge.views.chain_setup', name='chain_setup'), 
     url(r'^hetatms', 'edge.views.hetatm_setup', name='hetatm_setup'),
     url(r'^source', 'edge.views.source_setup', name='source_setup'),
-    url(r'^results', 'edge.views.results', name='results'),
-    
+    url(r'^bond_results', 'edge.views.bond_results', name='bond_results'),
+    url(r'^atom_results', 'edge.views.atom_results', name='atom_results'),   
 )
 
 if settings.DEBUG:
