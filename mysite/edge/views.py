@@ -16,7 +16,7 @@ def home_page(request):
     if request.method == 'POST':
         pdb_id = request.POST['pdb_id'].upper()
         bio = request.POST.get('bio')
-        analysis_type = request.POST.get('analysis_type')
+        analysis_type = request.POST.getlist('analysis_type')
         request.session['pdb_id'] = pdb_id
         request.session['bio'] = bio
         request.session['analysis_type'] = analysis_type
@@ -148,16 +148,14 @@ def hetatm_setup(request):
 def source_setup(request):
     
     if request.method == 'POST':
-        print "In source_setup POST"
+        
         residues = request.session.get('residue_list')
         source_residues_idx = request.POST.getlist('residues')
-        print 'Source residues idx: ' + str(source_residues_idx)
-        source_residues = []
-        for idx in source_residues_idx:
-            source_residues.append(residues[int(idx)])
+        source_residues = [residues[int(idx)] for idx in source_residues_idx]
+        
         request.session['source_residues'] = source_residues
 
-        analysis_type = request.session.get('analysis_type')
+        analysis_type = request.session.getlist('analysis_type')
         if analysis_type == 'edgeedge':
             return redirect('/bond_results')
         elif analysis_type == 'transients':
@@ -202,6 +200,9 @@ def source_setup(request):
 
         else:
             return redirect('/')
+
+def calculations(request):
+    pass
 
 def bond_results(request):
 

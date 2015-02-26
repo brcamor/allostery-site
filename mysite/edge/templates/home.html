@@ -15,8 +15,8 @@ To begin the analysis, enter the 4-digit PDB ID of the structure you would like 
 	<input type="checkbox" id="bio_checkbox" name="bio" value=1> Bio
       </div>
       <p>Type of analysis: 
-	<input type="radio" name="analysis_type" value="edgeedge"> Edge-edge
-	<input type="radio" name="analysis_type" value="transients"> Transients<br>
+	<input type="checkbox" name="analysis_type" value="edgeedge"><label>Edge-edge</label>
+	<input type="checkbox" name="analysis_type" value="transients"><label>Transients</label>
       </p>
       {% csrf_token %}
     </form>
